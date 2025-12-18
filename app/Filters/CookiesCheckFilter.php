@@ -36,7 +36,6 @@ class CookiesCheckFilter implements FilterInterface
 
         try {
             $secret = getenv('JWT_PRIVATE_KEY') ?: 'your_jwt_secret_key';
-
             $decoded = JWT::decode($jwt, new Key($secret, 'HS256'));
         } catch (\Throwable $th) {
             log_message('error', 'cookie token check throw ', ['error' => $th]);

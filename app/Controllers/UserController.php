@@ -9,6 +9,8 @@ class UserController extends CommonController
 {
     public function index()
     {
+        $loggedUserValue =  $this->getLoggedUserDetails();
+        prt($loggedUserValue);
         return "hello";
     }
 }
