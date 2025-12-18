@@ -10,7 +10,7 @@ $routes->get('/', 'Home::index');
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('login', 'AuthController::index');
     $routes->post('admin-login', 'AuthController::authLogin');
-    $routes->post('cookie', 'AuthController::cookie');
+
 });
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
