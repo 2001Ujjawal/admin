@@ -7,10 +7,15 @@ use App\Controllers\CommonController;
 
 class UserController extends CommonController
 {
+    protected $loggedUserValue;
+
+    public function __construct()
+    {
+        $this->loggedUserValue =  $this->getLoggedUserDetails();
+    }
+
     public function index()
     {
-        $loggedUserValue =  $this->getLoggedUserDetails();
-        prt($loggedUserValue);
-        return "hello";
+        
     }
 }
