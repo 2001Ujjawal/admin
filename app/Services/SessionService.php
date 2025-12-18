@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use CodeIgniter\Session\Session;
+use App\Interfaces\SessionServiceInterface;
 
-class SessionService
+class SessionService // implements SessionServiceInterface
 {
     protected Session $session;
 
@@ -22,17 +23,20 @@ class SessionService
     {
         $this->session->setFlashdata('success', $message);
     }
-
-    public function set(array $data): void
+    public function set($value): void
     {
-        $this->session->set($data);
+        //string $key $key, , 
+        $finalValue = [
+            'sessionUserData' => $value,
+        ];
+        $this->session->set($finalValue);
     }
 
     public function get(?string $key = null)
     {
         return $key
             ? $this->session->get($key)
-            : $this->session->get();
+            : $this->session->get('sessionUserData');
     }
 
     public function remove(array $keys): void

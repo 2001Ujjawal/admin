@@ -52,4 +52,6 @@ class JwtHelper
         $key = getenv('JWT_PRIVATE_KEY');
         return JWT::decode($token, new Key($key, 'HS256'));
     }
+
+    
 }

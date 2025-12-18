@@ -212,10 +212,14 @@
                     </li>
 
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
-                            <i class="bi bi-box-arrow-right"></i>
-                            <span>Sign Out</span>
-                        </a>
+                        <form action="<?= base_url('logout') ?>" method="post" class="d-inline">
+                            <?= csrf_field() ?>
+                            <button type="submit" class="dropdown-item d-flex align-items-center bg-transparent border-0">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span class="ms-2">Sign Out</span>
+                            </button>
+                        </form>
+
                     </li>
 
                 </ul><!-- End Profile Dropdown Items -->

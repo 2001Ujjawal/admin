@@ -7,9 +7,12 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use App\Services\SessionService;
 
 class CookiesCheckFilter implements FilterInterface
 {
+    protected $sessionService;
+
     /**
      * Do whatever processing this filter needs to do.
      * By default it should not return anything during
@@ -28,9 +31,11 @@ class CookiesCheckFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         //
+        $sessionService = new SessionService();
         $jwt = $request->getCookie('access_token');
 
         if (empty($jwt)) {
+            $sessionService->error('Token expired ! please login again');
             return redirect()->to('/login');
         }
 

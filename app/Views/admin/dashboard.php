@@ -14,7 +14,7 @@
         <div class="row">
 
             <!-- Left side columns -->
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="row">
 
                     <!-- Sales Card -->
@@ -358,7 +358,7 @@
             </div><!-- End Left side columns -->
 
             <!-- Right side columns -->
-            <div class="col-lg-4">
+            <div class="col-lg-12">
 
                 <!-- Recent Activity -->
                 <div class="card">

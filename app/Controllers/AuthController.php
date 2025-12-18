@@ -2,19 +2,21 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\Cookie\Cookie;
 use App\Helpers\JwtHelper;
 use App\Services\{
-    AdminAuthService
+    AdminAuthService,
+    SessionService
 };
 
-class AuthController extends BaseController
+class AuthController extends CommonController
 {
     protected AdminAuthService $adminAuthService;
-    protected $session;
+
     public function __construct()
     {
         $this->adminAuthService = new AdminAuthService();
-        $this->session = session();
+        $this->sessionService = new SessionService();
     }
     public function index()
     {
@@ -39,16 +41,28 @@ class AuthController extends BaseController
     public function authLogin()
     {
         $postRequest = $this->request->getPost();
-        $loginSuccess = $this->adminAuthService->login($postRequest, $this->session);
+        $loginSuccess = $this->adminAuthService->login($postRequest);
         if ($loginSuccess) {
             $response =   JwtHelper::setCookieToken($postRequest);
             if (empty($response)) {
-                $session->setFlashdata('error', 'Token Creation Failed');
+                $this->sessionService->error('Token Creation Failed');
                 return redirect()->back()->withInput();
             }
-            return $response->redirect('/users');
+            return $response->redirect('/dashboard');
         } else {
             return redirect()->back()->withInput();
         }
+    }
+
+    public function logout()
+    {
+        $response = service('response');
+        $response->deleteCookie(
+            'access_token',
+            '',    
+            '/'  
+        );
+        session()->destroy();
+        return $response->redirect(base_url('login'));
     }
 }

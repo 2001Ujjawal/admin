@@ -3,33 +3,41 @@
 namespace App\Services;
 
 use App\Helpers\JwtHelper;
-
+use App\Services\SessionService;
 
 class AdminAuthService
 {
+    protected $sessionService;
 
+    public function __construct()
+    {
+        $this->sessionService = new SessionService();
+    }
 
-    public function login(array $requestData, $session)
+    public function login(array $requestData)
     {
         $userEmail = $requestData['email'] ?? null;
         $userPassword = $requestData['password'] ?? null;
 
         if (empty($userEmail)) {
-            $session->setFlashdata('error', 'Please enter a valid email');
+            $this->sessionService->error('Please enter a valid email');
             return false;
         }
 
         if (empty($userPassword)) {
-            $session->setFlashdata('error', 'Please enter a password');
+            $this->sessionService->error('Please enter a password');
             return false;
+            
         }
 
         if ($userEmail === 'u5459607@gmail.com' && $userPassword === '123456') {
-            $session->setFlashdata('success', 'Login successful');
+            $this->sessionService->success('Login successful');
             return true;
         }
 
-        $session->setFlashdata('error', 'Invalid email or password');
+        $this->sessionService->error('Invalid email or password');
         return false;
     }
+
+ 
 }
