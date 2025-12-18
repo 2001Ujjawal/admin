@@ -63,41 +63,41 @@
                                         <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
                                         <p class="text-center small">Enter your username & password to login</p>
                                     </div>
-                                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
-                                        A simple primary alert—check it out!
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-                                    <form class="row g-3 needs-validation" novalidate>
 
+                                    <?php if (session()->getFlashdata('error')): ?>
+                                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                            <?= session()->getFlashdata('error') ?>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    <?php endif; ?>
+
+
+
+
+                                    <form action="<?= base_url('admin-login') ?>" method="POST" lass="row g-3 needs-validation" novalidate>
+                                        <?= csrf_field() ?>
                                         <div class="col-12">
                                             <label for="yourUsername" class="form-label">Username</label>
                                             <div class="input-group has-validation">
                                                 <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                                <input type="email" name="username" class="form-control" id="yourUsername" required>
-                                                <div class="invalid-feedback">Please enter your valid email.</div>
+                                                <input type="email" name="email" class="form-control" id="yourUsername" required>
                                             </div>
                                         </div>
 
                                         <div class="col-12">
                                             <label for="yourPassword" class="form-label">Password</label>
                                             <input type="password" name="password" class="form-control" id="yourPassword" required>
-                                            <div class="invalid-feedback">Please enter your password!</div>
                                         </div>
                                         <div class="col-12">
-                                            <button class="btn btn-primary w-100" type="submit">Login</button>
-                                            
+                                            <button style="padding-top: 10px;" class="btn btn-primary w-100" type="submit">Login</button>
                                         </div>
-                                        
+
                                     </form>
 
                                 </div>
                             </div>
 
                             <div class="credits">
-                                <!-- All the links in the footer should remain intact. -->
-                                <!-- You can delete the links only if you purchased the pro version. -->
-                                <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
                                 Designed by <a href="https://bootstrapmade.com/">Esloz</a>
                             </div>
 
@@ -109,7 +109,8 @@
 
         </div>
     </main><!-- End #main -->
-
+    <!-- Common JS -->
+    <?= view('admin/js/commonJs.php') ?>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->

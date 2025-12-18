@@ -82,6 +82,7 @@ class Filters extends BaseFilters
                 'except' => [
                     '/login',
                     'cookie',
+                    'admin-login'
 
                 ]
             ]
