@@ -78,3 +78,8 @@ defined('EXIT_DATABASE')       || define('EXIT_DATABASE', 8);       // database 
 defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9);      // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125);    // highest automatically-assigned error code
 define('LOGIN_URL', '/login');
+define('HEADER', 'admin/template/header');
+define('FOOTER', 'admin/template/footer');
+define('SIDEBAR', 'admin/template/sidebar');
+define('NAVBAR', 'admin/template/nav');
+define('PAGE_ICON_IMAGE_URL' , 'https://backoffice.esolz.com/images/favicon.ico?v=ktP4vXHDPXiqJ7NGTx8LBQ_8JXAZsUKK-7NleWO_p10'); 

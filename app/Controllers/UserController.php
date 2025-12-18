@@ -14,8 +14,5 @@ class UserController extends CommonController
         $this->loggedUserValue =  $this->getLoggedUserDetails();
     }
 
-    public function index()
-    {
-        
-    }
+    public function index() {}
 }
