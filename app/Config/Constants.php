@@ -83,3 +83,4 @@ define('FOOTER', 'admin/template/footer');
 define('SIDEBAR', 'admin/template/sidebar');
 define('NAVBAR', 'admin/template/nav');
 define('PAGE_ICON_IMAGE_URL' , 'https://backoffice.esolz.com/images/favicon.ico?v=ktP4vXHDPXiqJ7NGTx8LBQ_8JXAZsUKK-7NleWO_p10'); 
+

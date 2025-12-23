@@ -8,42 +8,49 @@ class BaseApiController extends ResourceController
 {
     protected $format = 'json';
 
-    protected function success($message, $data = [], $code = 200)
+
+
+
+
+    protected function success($success, $message, ?array $data = null, $code = 200)
     {
-        return $this->respond([
-            'status'  => true,
+        return (object) [
+            'success'  => $success,
+            'httpStatus' => $code,
             'message' => $message,
             'data'    => $data
-        ], $code);
+        ];
     }
 
-    protected function error($message, $code = 400, $errors = [])
+    protected function error($success, $message, $code = 400, $errors = null)
     {
-        return $this->respond([
-            'status'  => false,
+        return (object) [
+            'success'  => $success,
+            'httpStatus' => $code,
             'message' => $message,
             'errors'  => $errors
-        ], $code);
+        ];
     }
 
-    protected function sendApiResponse($resp)
+    protected function sendApiResponse(object $resp)
     {
+
         $response = [
-            'success'    => $resp['success'] ?? false,
-            'httpStatus' => $resp['httpStatus'] ?? 500,
-            'message'    => $resp['message'] ?? '',
-            'errors'     => $resp['errors'] ?? null,
-            'data'       => $resp['data'] ?? null,
+            'success'    => $resp->success ?? false,
+            'httpStatus' => $resp->httpStatus ?? 500,
+            'message'    => $resp->message ?? '',
+            'errors'     => $resp->errors ?? null,
+            'data'       => $resp->data ?? null,
         ];
 
-        if ($resp['success']) {
-            unset($response['errors']);
+        if ($resp->success) {
+            unset($response->errors);
         }
 
-        if (!$resp['success']) {
-            unset($response['data']);
+        if (!$resp->success) {
+            unset($response->data);
         }
 
-        return $this->respond($response, $resp['httpStatus'] ?? 500);
+        return $this->respond($response, $resp->httpStatus ?? 500);
     }
 }

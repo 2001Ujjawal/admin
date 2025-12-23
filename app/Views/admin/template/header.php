@@ -25,6 +25,8 @@
   <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
@@ -39,3 +41,31 @@
 </head>
 
 <body>
+  <script>
+    function HandleAjaxRequest(url, data, method) {
+      console.log("======================", data);
+      
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          url: url,
+          data: data,
+          type: method,
+          dataType: "json",
+          success: function(response) {
+            resolve({
+              status: response.success ?? false,
+              message: response.message,
+              data: response.data ?? null,
+              errors: response.errors ?? null,
+            });
+          },
+          error: function(xhr, ajaxOptions, thrownError) {
+            if (xhr.status === 401) {
+              window.location.href = '<?= base_url("/login"); ?>';
+            }
+            reject(xhr.responseJSON);
+          }
+        });
+      });
+    }
+  </script>

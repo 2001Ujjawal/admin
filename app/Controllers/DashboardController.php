@@ -15,9 +15,6 @@ class DashboardController extends CommonController
     }
     public function index()
     {
-
-
-
         $headerData = [
             'pageTitle' => 'Dashboard',
             'metaTitle' => 'admin',
@@ -28,6 +25,7 @@ class DashboardController extends CommonController
             view(NAVBAR) .
             view(SIDEBAR) .
             view('admin/dashboard') .
+            view('admin/js/commonJs.php') .
             view(FOOTER);
     }
 }
