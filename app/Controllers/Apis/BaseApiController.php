@@ -12,7 +12,7 @@ class BaseApiController extends ResourceController
 
 
 
-    protected function success($success, $message, ?array $data = null, $code = 200)
+    protected function success($success, $message, ?array $data = null, $code = 200) : object
     {
         return (object) [
             'success'  => $success,
@@ -22,7 +22,7 @@ class BaseApiController extends ResourceController
         ];
     }
 
-    protected function error($success, $message, $code = 400, $errors = null)
+    protected function error($success, $message, $code = 400, $errors = null) : object
     {
         return (object) [
             'success'  => $success,
@@ -32,7 +32,7 @@ class BaseApiController extends ResourceController
         ];
     }
 
-    protected function sendApiResponse(object $resp)
+    protected function sendApiResponse(object $resp) 
     {
 
         $response = [

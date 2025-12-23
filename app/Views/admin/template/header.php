@@ -42,9 +42,16 @@
 
 <body>
   <script>
+    /**
+     * url string 
+     * data array or object
+     * method all type HTTPS method(GET , POST , PATCH ,PUT , DELETE)
+     * !test report 
+     *      -- 
+     */
     function HandleAjaxRequest(url, data, method) {
       console.log("======================", data);
-      
+
       return new Promise((resolve, reject) => {
         $.ajax({
           url: url,
