@@ -3,32 +3,32 @@
 namespace App\Controllers;
 
 use App\Controllers\CommonController;
-use App\Services\SessionService;
 
-class DashboardController extends CommonController
+
+class StudentsController extends CommonController
 {
-    protected $sessionService;
+    protected $loggedUserValue;
 
     public function __construct()
     {
-        $this->sessionService = new SessionService;
+        $this->loggedUserValue =  $this->getLoggedUserDetails();
     }
+
     public function index()
     {
-        $headerData = [
-            'pageTitle' => 'Dashboard',
-            'metaTitle' => 'admin',
 
+        $headerData = [
+            'pageTitle' => 'Students',
+            'metaTitle' => 'admin',
         ];
         $sidebar = [
             'sidebar' => 'students'
         ];
-        return
-            view(HEADER, $headerData) .
+        // prt($sidebar) ; 
+        return  view(HEADER, $headerData) .
             view(NAVBAR) .
             view(SIDEBAR, $sidebar) .
-            view('admin/dashboard') .
-            view('admin/js/commonJs.php') .
+            view('admin/students') .
             view(FOOTER);
     }
 }

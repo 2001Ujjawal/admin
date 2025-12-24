@@ -84,12 +84,12 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12">
+                                        <div class="col-12" style="padding-bottom: 10px;">
                                             <label for="yourPassword" class="form-label">Password</label>
                                             <input type="password" name="password" class="form-control" id="yourPassword" required>
                                         </div>
                                         <div class="col-12">
-                                            <button style="padding-top: 10px;" class="btn btn-primary w-100" type="submit">Login</button>
+                                            <button class="btn btn-primary w-100" type="submit">Login</button>
                                         </div>
 
                                     </form>
@@ -97,9 +97,7 @@
                                 </div>
                             </div>
 
-                            <div class="credits">
-                                Designed by <a href="https://bootstrapmade.com/">Esloz</a>
-                            </div>
+                           
 
                         </div>
                     </div>

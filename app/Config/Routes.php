@@ -17,8 +17,11 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('dashboard', ['namespace' => 'App\Controllers'], function ($routes) {
         $routes->get('/', 'DashboardController::index');
     });
-    $routes->group('users', ['namespace' => 'App\Controllers'], function ($routes) {
-        $routes->get('/', 'UserController::index');
+    $routes->group('students', ['namespace' => 'App\Controllers'], function ($routes) {
+        $routes->get('/', 'StudentsController::index');
+    });
+    $routes->group('books', ['namespace' => 'App\Controllers'], function ($routes) {
+        $routes->get('/', 'BooksController::index');
     });
 });
 
