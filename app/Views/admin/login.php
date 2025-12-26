@@ -97,7 +97,7 @@
                                 </div>
                             </div>
 
-                           
+
 
                         </div>
                     </div>
@@ -124,6 +124,14 @@
     <!-- Template Main JS File -->
     <script src="assets/js/main.js"></script>
 
+    <script>
+        let error = "<?= session()->getFlashdata('error') ?>";
+        console.log("================", error);
+        notificationMessage(error, 'error');
+    </script>
 </body>
+<script>
+    
+</script>
 
 </html>

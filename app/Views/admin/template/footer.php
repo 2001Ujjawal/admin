@@ -27,7 +27,30 @@
   <!-- Template Main JS File -->
 
   <script src="assets/js/main.js"></script>
+  <script>
+      function notificationMessage(message, type) {
 
+          let bgColor = "";
+
+          if (type === "success") {
+              bgColor = "linear-gradient(to right, #00b09b, #96c93d)";
+          } else if (type === "error") {
+              bgColor = "linear-gradient(to right, #ff5f6d, #ffc371)";
+          }
+
+          Toastify({
+              text: message,
+              duration: 3000,
+              close: true,
+              gravity: "top",
+              position: "right",
+              stopOnFocus: true,
+              style: {
+                  background: bgColor,
+              },
+          }).showToast();
+      }
+  </script>
   </body>
 
 
