@@ -82,8 +82,5 @@ define('HEADER', 'admin/template/header');
 define('FOOTER', 'admin/template/footer');
 define('SIDEBAR', 'admin/template/sidebar');
 define('NAVBAR', 'admin/template/nav');
-define('PAGE_ICON_IMAGE_URL', 'https://backoffice.esolz.com/images/favicon.ico?v=ktP4vXHDPXiqJ7NGTx8LBQ_8JXAZsUKK-7NleWO_p10');
-define('HTTP_OK', 200);
-define('SMS_SEND_TYPE_EMAIL', 'email');
-define('SMS_SEND_TYPE_PHONE', 'phone');
-define('SMS_SEND_TYPE_WHATSAPP', 'whatsapp');
+define('PAGE_ICON_IMAGE_URL' , 'https://backoffice.esolz.com/images/favicon.ico?v=ktP4vXHDPXiqJ7NGTx8LBQ_8JXAZsUKK-7NleWO_p10'); 
+
