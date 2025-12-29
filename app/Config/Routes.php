@@ -27,7 +27,8 @@ $routes->group('', function ($routes) {
         $routes->group('users', [], function ($routes) {
             $routes->get('(:any)', 'UserApiController::userList/$1');
         });
-        $routes->group('libraries', ['namespace' => 'App\Controllers'], function ($routes) {
+        $routes->group('libraries', ['namespace' => 'App\Controllers\Apis'], function ($routes) {
+            $routes->post('login', 'LibraryApiController::login');
             $routes->post('/', 'LibraryApiController::addLibrary');
         });
     });
