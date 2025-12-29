@@ -8,11 +8,7 @@ class BaseApiController extends ResourceController
 {
     protected $format = 'json';
 
-
-
-
-
-    protected function success($success, $message, ?array $data = null, $code = 200) : object
+    protected function success($success, $message, ?array $data = null, $code = 200): object
     {
         return (object) [
             'success'  => $success,
@@ -22,7 +18,7 @@ class BaseApiController extends ResourceController
         ];
     }
 
-    protected function error($success, $message, $code = 400, $errors = null) : object
+    protected function error($success, $message, $code = 400, $errors = null): object
     {
         return (object) [
             'success'  => $success,
@@ -32,7 +28,7 @@ class BaseApiController extends ResourceController
         ];
     }
 
-    protected function sendApiResponse(object $resp) 
+    protected function sendApiResponse(object $resp)
     {
 
         $response = [
@@ -51,6 +47,6 @@ class BaseApiController extends ResourceController
             unset($response->data);
         }
 
-        return $this->respond($response, $resp->httpStatus ?? 500);
+        return $this->respond($response, $resp->httpStatus ?? HTTP_INTERNAL_SERVER_ERROR);
     }
 }
