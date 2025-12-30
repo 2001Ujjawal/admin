@@ -87,3 +87,4 @@ define('HTTP_OK', 200);
 define('SMS_SEND_TYPE_EMAIL', 'email');
 define('SMS_SEND_TYPE_PHONE', 'phone');
 define('SMS_SEND_TYPE_WHATSAPP', 'whatsapp');
+define('STATUS_ACTIVE', 'active');
