@@ -5,6 +5,7 @@ namespace App\Services;
 use CodeIgniter\I18n\Time;
 use App\Helpers\{
     checkValidationRulesHelper,
+    JwtHelper,
     NumberToWordsHelper,
     ResponseHelper
 };
@@ -57,14 +58,14 @@ class LibraryAuthService
 
         $librarySettingDetails = $this->librarySettingModel->librarySettingDetails($libraryId) ?? null;
 
-        $otpSendType = $librarySettingDetails->otp_send_type;
+        $otpSendType = $librarySettingDetails->otp_send_type ;
         $libraryAuthenticationValue = (bool) $librarySettingDetails->is_two_setup_authentication;
         $totalAllowLoginDevice = (int) $librarySettingDetails->allow_login_device ?? 1;
 
-        if ($totalAllowLoginDevice <= $totalLibraryLoginSession) {
-            $convertNumberToWords = NumberToWordsHelper::convertNumber($totalAllowLoginDevice);
-            return ResponseHelper::error(400, "Only allow {$convertNumberToWords} device", ['errors' => 'its already login']);
-        }
+        // if ($totalAllowLoginDevice <= $totalLibraryLoginSession) {
+        //     $convertNumberToWords = NumberToWordsHelper::convertNumber($totalAllowLoginDevice);
+        //     return ResponseHelper::error(400, "Only allow {$convertNumberToWords} device", ['errors' => 'its already login']);
+        // }
 
         $checkTwoSetupAuthenticationIsEnable = $this->checkTwoSetupAuthentication(
             $libraryAuthenticationValue,
@@ -77,14 +78,20 @@ class LibraryAuthService
         if (!$loginSession['loginSessionId']) {
             return ResponseHelper::error(400, 'Login Failed');
         }
-
+        $cookieTokenPayload =  [
+            'name' => $library->name ?? null,
+            'user_type' => $library->library_user_type,
+        ];
+        $cookieTokenGenerate = JwtHelper::setCookieToken($cookieTokenPayload);
+        if (!$cookieTokenGenerate) {
+            return ResponseHelper::error(500, 'Token creation failed');
+        }
 
         $loginLibraryData = [
             'libraryId' => $libraryId,
             'loginSessionId' => $loginSession['loginSessionId'],
             'twoSetupAuthentication' => $checkTwoSetupAuthenticationIsEnable['value'],
         ];
-
         return ResponseHelper::success(
             $checkTwoSetupAuthenticationIsEnable['statusCode'],
             $checkTwoSetupAuthenticationIsEnable['message'],

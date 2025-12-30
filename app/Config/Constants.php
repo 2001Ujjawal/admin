@@ -89,7 +89,7 @@ define('SMS_SEND_TYPE_PHONE', 'phone');
 define('SMS_SEND_TYPE_WHATSAPP', 'whatsapp');
 define('STATUS_ACTIVE', 'active');
 
-define('LIBRARY_HEADER', 'admin/library/header');
-define('LIBRARY_NAVBAR', 'admin/library/footer');
-define('LIBRARY_SIDEBAR', 'admin/library/sidebar');
-define('LIBRARY_FOOTER', 'admin/library/nav');
+define('LIBRARY_HEADER', 'library/template/header');
+define('LIBRARY_NAVBAR', 'library/template/nav');
+define('LIBRARY_SIDEBAR', 'library/template/sidebar');
+define('LIBRARY_FOOTER', 'library/template/footer');

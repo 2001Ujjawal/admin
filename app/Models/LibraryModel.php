@@ -18,7 +18,8 @@ class LibraryModel extends Model
         'created_by',
         'created_at',
         'type',
-        'reg_no'
+        'reg_no',
+        'library_user_type'
     ];
 
 
@@ -34,7 +35,8 @@ class LibraryModel extends Model
         ],
     ];
 
-    public function checkLibraryExits(string $email) : ?object {
-        return $this->where('email' , $email)->get()->getRow(); 
+    public function checkLibraryExits(string $email): ?object
+    {
+        return $this->where('email', $email)->get()->getRow();
     }
 }
