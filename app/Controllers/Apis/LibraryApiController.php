@@ -24,9 +24,16 @@ class LibraryApiController extends BaseApiController
     }
     public function login()
     {
-        
+
         $requestData = $this->request->getJSON(true) ?? [];
         $login = $this->libraryAuthService->login($requestData);
         return $this->sendApiResponse($login);
     }
+
+    public function logout()
+    {
+        $requestData = $this->request->getJSON(true) ?? [];
+        $logout = $this->libraryAuthService->logout($requestData);
+        return $this->sendApiResponse($logout);
+    }  
 }

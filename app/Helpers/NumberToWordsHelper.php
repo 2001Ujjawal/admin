@@ -42,8 +42,40 @@ class NumberToWordsHelper
             $res .= (empty($res) ? "" : " ") . Self::convertNumber($Hn) . " Hundred";
         }
 
-        $ones = array("", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eightteen", "Nineteen");
-        $tens = array("", "", "Twenty", "Thirty", "Fourty", "Fifty", "Sixty", "Seventy", "Eigthy", "Ninety");
+        $ones = array(
+            "",
+            "One",
+            "Two",
+            "Three",
+            "Four",
+            "Five",
+            "Six",
+            "Seven",
+            "Eight",
+            "Nine",
+            "Ten",
+            "Eleven",
+            "Twelve",
+            "Thirteen",
+            "Fourteen",
+            "Fifteen",
+            "Sixteen",
+            "Seventeen",
+            "Eightteen",
+            "Nineteen"
+        );
+        $tens = array(
+            "",
+            "",
+            "Twenty",
+            "Thirty",
+            "Fourty",
+            "Fifty",
+            "Sixty",
+            "Seventy",
+            "Eigthy",
+            "Ninety"
+        );
 
         if ($Dn || $n) {
             if (!empty($res)) {

@@ -11,7 +11,7 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('login', 'AuthController::index');
     $routes->post('admin-login', 'AuthController::authLogin');
     $routes->post('logout', 'AuthController::logout');
-    
+
     $routes->group('libraries', ['namespace' => 'App\Controllers\Library'], function ($routes) {
         $routes->get('login', 'LibraryController::loginPageView');
         $routes->get('books', 'BooksController::index');
@@ -35,6 +35,7 @@ $routes->group('', function ($routes) {
         });
         $routes->group('libraries', ['namespace' => 'App\Controllers\Apis'], function ($routes) {
             $routes->post('login', 'LibraryApiController::login');
+            $routes->post('logout', 'LibraryApiController::logout');
             $routes->post('/', 'LibraryApiController::addLibrary');
         });
     });

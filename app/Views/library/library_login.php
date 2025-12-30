@@ -28,15 +28,20 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
-
+    <style>
+        .otp-box {
+            width: 50px;
+            height: 50px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
 
     <main>
         <div class="container">
-
             <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
                     <div class="row justify-content-center">
@@ -50,9 +55,7 @@
                             </div><!-- End Logo -->
 
                             <div class="card mb-3">
-
-                                <div class="card-body">
-
+                                <div class="card-body" id="loginFromDiv">
                                     <div class="pt-4 pb-2">
                                         <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
                                         <p class="text-center small">Enter your username & password to login</p>
@@ -78,17 +81,40 @@
                                         </div>
                                     </form>
                                 </div>
+
+                                <div class="card-body" id="otpValidationDiv" style="display: none;">
+                                    <div class="pt-4 pb-2">
+                                        <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                                        <p class="text-center small">Enter your 4-digit OTP</p>
+                                    </div>
+
+                                    <form id="otpSubmitForm" novalidate>
+                                        <div class="d-flex justify-content-center gap-2 mb-3 otp-inputs">
+                                            <input type="text" class="form-control text-center otp-box" maxlength="1" inputmode="numeric">
+                                            <input type="text" class="form-control text-center otp-box" maxlength="1" inputmode="numeric">
+                                            <input type="text" class="form-control text-center otp-box" maxlength="1" inputmode="numeric">
+                                            <input type="text" class="form-control text-center otp-box" maxlength="1" inputmode="numeric">
+                                        </div>
+
+                                        <input type="hidden" name="otp" id="otpValue">
+
+                                        <div class="col-12">
+                                            <button class="btn btn-primary w-100" type="submit">
+                                                Verify OTP
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>
-
             </section>
-
         </div>
+
+
     </main><!-- End #main -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     <!-- Vendor JS Files -->
@@ -105,14 +131,74 @@
     <script src="<?= base_url('') ?>assets/js/main.js"></script>
 </body>
 <script>
+    const otpBoxes = document.querySelectorAll('.otp-box');
+    const otpValue = document.getElementById('otpValue');
+
+    otpBoxes.forEach((box, index) => {
+
+        // Only numbers + auto move
+        box.addEventListener('input', (e) => {
+            box.value = box.value.replace(/[^0-9]/g, '');
+
+            if (box.value && index < otpBoxes.length - 1) {
+                otpBoxes[index + 1].focus();
+            }
+
+            updateOtp();
+        });
+
+        // Backspace support
+        box.addEventListener('keydown', (e) => {
+            console.log("============= Backspace ", e);
+
+            if (e.key === "Backspace" && !box.value && index > 0) {
+                otpBoxes[index - 1].focus();
+            }
+        });
+
+        // Paste support (1234)
+        box.addEventListener('paste', (e) => {
+            e.preventDefault();
+
+            const pasteData = e.clipboardData.getData('text').replace(/\D/g, '');
+            if (!pasteData) return;
+
+            pasteData.split('').forEach((num, i) => {
+                if (otpBoxes[i]) {
+                    otpBoxes[i].value = num;
+                }
+            });
+
+            updateOtp();
+            otpBoxes[Math.min(pasteData.length, otpBoxes.length) - 1].focus();
+        });
+    });
+
+    function updateOtp() {
+        let otp = '';
+        otpBoxes.forEach(box => otp += box.value);
+        otpValue.value = otp;
+    }
+    document.getElementById('otpSubmitForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (otpValue.value.length !== 4) {
+            notificationMessage('Please enter full 4-digit OTP');
+            return;
+        }
+
+        console.log("OTP Submitted:", otpValue.value);
+
+        // AJAX API call here
+    });
+
+
     $('#loginFromSubmit').submit(function(e) {
         e.preventDefault();
 
         let email = $('#email').val().trim();
         let password = $('#password').val().trim();
-
-        console.log("Email:", email);
-        console.log("Password:", password);
+        let loginFromDiv = $('#loginFromDiv');
 
         if (email === '') {
             return notificationMessage('Email is required', 'error');
@@ -134,11 +220,22 @@
             data: JSON.stringify(loginPayload),
             success: function(response) {
                 notificationMessage(response.message, 'success');
+                const loginData = response.data;
                 const dashboardUrl = "<?= base_url('libraries/dashboard') ?>";
                 if (response.success && response.httpStatus === 200) {
-                    setTimeout(() => {
-                        window.location.href = dashboardUrl;
-                    }, 1500);
+                    if (loginData.loginUserData.twoSetupAuthentication === false) {
+                        localStorage.setItem(
+                            'loggedUserDetails',
+                            JSON.stringify(loginData.loginUserData)
+                        );
+                        setTimeout(() => {
+                            window.location.href = dashboardUrl;
+                        }, 1500);
+                    } else {
+                        const otpValidationDiv = document.getElementById('otpValidationDiv');
+                        loginFromDiv.css("display", "none");
+                        otpValidationDiv.style.display = "block";
+                    }
                 }
             },
             error: function(xhr) {
@@ -146,13 +243,11 @@
                 console.error(xhr.responseJSON);
             }
         });
-        console.log("=========== hello");
     });
 </script>
 
 <script>
-    function notificationMessage(message, type) {
-
+    function notificationMessage(message, type = 'error') {
         let bgColor = "";
 
         if (type === "success") {
