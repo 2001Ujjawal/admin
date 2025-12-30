@@ -88,3 +88,8 @@ define('SMS_SEND_TYPE_EMAIL', 'email');
 define('SMS_SEND_TYPE_PHONE', 'phone');
 define('SMS_SEND_TYPE_WHATSAPP', 'whatsapp');
 define('STATUS_ACTIVE', 'active');
+
+define('LIBRARY_HEADER', 'admin/library/header');
+define('LIBRARY_NAVBAR', 'admin/library/footer');
+define('LIBRARY_SIDEBAR', 'admin/library/sidebar');
+define('LIBRARY_FOOTER', 'admin/library/nav');
