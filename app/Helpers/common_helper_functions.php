@@ -17,6 +17,21 @@ if (!function_exists('prt')) {
     }
 };
 
+if (!function_exists('vrd')) {
+    function vrd($data, bool $dieFlag = true)
+    {
+        if ($dieFlag == true) {
+            print "<pre>";
+            var_dump($data);
+            print "</pre>";
+            die;
+        }
+        print "<pre>";
+        print_r($data);
+        print "</pre>";
+        return;
+    }
+};
 
 if (!function_exists('generateUid')) {
     function generateUid($prefix = null, $length = 8)
