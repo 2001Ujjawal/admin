@@ -18,4 +18,16 @@ class LibraryLoginSessionModel extends Model
         'created_at',
         'status'
     ];
+
+
+    public function loginSessionCount(string $libraryId): int
+    {
+        $countConditions = [
+            'library_id' => $libraryId ,
+            'status'     => STATUS_ACTIVE,
+            'is_login'   => 1 
+        ];
+        $countLibraryAllSession = $this->where($countConditions)->countAllResults();
+        return $countLibraryAllSession;
+    }
 }

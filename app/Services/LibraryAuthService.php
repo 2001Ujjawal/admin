@@ -5,6 +5,7 @@ namespace App\Services;
 use CodeIgniter\I18n\Time;
 use App\Helpers\{
     checkValidationRulesHelper,
+    NumberToWordsHelper,
     ResponseHelper
 };
 
@@ -51,16 +52,19 @@ class LibraryAuthService
         $libraryId = $library->uid;
         $phoneNo = $library->phone_no;
 
-        $loginSession = $this->loginSession($email, $phoneNo, $libraryId);
 
-        if (!$loginSession['loginSessionUid']) {
-            return ResponseHelper::error(400, 'Login Failed');
-        }
+        $totalLibraryLoginSession =  $this->libraryLoginSessionModel->loginSessionCount($libraryId) ?? 0;
 
         $librarySettingDetails = $this->librarySettingModel->librarySettingDetails($libraryId) ?? null;
 
         $otpSendType = $librarySettingDetails->otp_send_type;
         $libraryAuthenticationValue = (bool) $librarySettingDetails->is_two_setup_authentication;
+        $totalAllowLoginDevice = (int) $librarySettingDetails->allow_login_device ?? 1;
+
+        if ($totalAllowLoginDevice <= $totalLibraryLoginSession) {
+            $convertNumberToWords = NumberToWordsHelper::convertNumber($totalAllowLoginDevice);
+            return ResponseHelper::error(400, "Only allow {$convertNumberToWords} device", ['errors' => 'its already login']);
+        }
 
         $checkTwoSetupAuthenticationIsEnable = $this->checkTwoSetupAuthentication(
             $libraryAuthenticationValue,
@@ -69,12 +73,15 @@ class LibraryAuthService
             $email
         );
 
-
+        $loginSession = $this->createLoginSession($email, $phoneNo, $libraryId);
+        if (!$loginSession['loginSessionId']) {
+            return ResponseHelper::error(400, 'Login Failed');
+        }
 
 
         $loginLibraryData = [
             'libraryId' => $libraryId,
-            'loginSessionUid' => $loginSession['loginSessionUid'],
+            'loginSessionId' => $loginSession['loginSessionId'],
             'twoSetupAuthentication' => $checkTwoSetupAuthenticationIsEnable['value'],
         ];
 
@@ -85,7 +92,7 @@ class LibraryAuthService
         );
     }
 
-    private function loginSession(
+    private function createLoginSession(
         string $email,
         string $phoneNo,
         string $libraryUid
@@ -101,9 +108,9 @@ class LibraryAuthService
         ];
 
         if (!$this->libraryLoginSessionModel->insert($loginSessionPayload)) {
-            return ['loginSessionUid' => null];
+            return ['loginSessionId' => null];
         }
-        return ['loginSessionUid' => $loginSessionUid];
+        return ['loginSessionId' => $loginSessionUid];
     }
 
 
@@ -128,7 +135,7 @@ class LibraryAuthService
         string $phoneNo,
         string $email,
     ): array {
-        if ($libraryAuthenticationValue === false) {
+        if ($libraryAuthenticationValue === false && $libraryAuthenticationValue == null) {
             return [
                 'statusCode' => HTTP_OK,
                 'value' => false,
