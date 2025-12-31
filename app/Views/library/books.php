@@ -21,7 +21,7 @@
                           <p>Add lightweight datatables to your project with using the <a href="https://github.com/fiduswriter/Simple-DataTables" target="_blank">Simple DataTables</a> library. Just add <code>.datatable</code> class name to any table you wish to conver to a datatable. Check for <a href="https://fiduswriter.github.io/simple-datatables/demos/" target="_blank">more examples</a>.</p>
 
                           <!-- Table with stripped rows -->
-                          <table class="table datatable">
+                          <table id="demo-table" class="table datatable">
                               <thead>
                                   <tr>
                                       <th>
@@ -737,12 +737,13 @@
                               </tbody>
                           </table>
                           <!-- End Table with stripped rows -->
-
+                          
                       </div>
                   </div>
 
               </div>
           </div>
+
       </section>
 
   </main>

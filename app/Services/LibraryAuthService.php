@@ -62,10 +62,10 @@ class LibraryAuthService
         $libraryAuthenticationValue = (bool) $librarySettingDetails->is_two_setup_authentication;
         $totalAllowLoginDevice = (int) $librarySettingDetails->allow_login_device ?? 1;
 
-        if ($totalAllowLoginDevice <= $totalLibraryLoginSession) {
-            $convertNumberToWords = NumberToWordsHelper::convertNumber($totalAllowLoginDevice);
-            return ResponseHelper::error(400, "Only allow {$convertNumberToWords} device", ['errors' => 'its already login']);
-        }
+        // if ($totalAllowLoginDevice <= $totalLibraryLoginSession) {
+        //     $convertNumberToWords = NumberToWordsHelper::convertNumber($totalAllowLoginDevice);
+        //     return ResponseHelper::error(400, "Only allow {$convertNumberToWords} device", ['errors' => 'its already login']);
+        // }
 
         $checkTwoSetupAuthenticationIsEnable = $this->checkTwoSetupAuthentication(
             $libraryAuthenticationValue,

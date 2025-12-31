@@ -5,6 +5,14 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+
+$routes->options('(:any)', function ($any) {
+    $response = service('response');
+    $response->setHeader('Access-Control-Allow-Origin', '*');
+    $response->setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    $response->setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization');
+    return $response->setStatusCode(200);
+});
 $routes->get('/', 'Home::index');
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
