@@ -14,6 +14,7 @@ use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\CookiesCheckFilter;
 
+
 class Filters extends BaseFilters
 {
     /**
@@ -31,11 +32,13 @@ class Filters extends BaseFilters
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-        'cors'          => Cors::class,
+        // 'cors'          => Cors::class,
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'cookieCheck'   => CookiesCheckFilter::class,
+        'cors' => \App\Filters\CorsFilter::class,
+
     ];
 
     /**
@@ -74,7 +77,9 @@ class Filters extends BaseFilters
      * }
      */
     public array $globals = [
+
         'before' => [
+            'cors',
             // 'honeypot',
             'csrf' => ['except' => 'backend-api/*'],
             // 'invalidchars',
@@ -88,6 +93,7 @@ class Filters extends BaseFilters
             ]
         ],
         'after' => [
+            'cors'
             // 'honeypot',
             // 'secureheaders',
         ],
