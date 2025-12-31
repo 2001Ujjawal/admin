@@ -82,8 +82,7 @@ class Filters extends BaseFilters
                 'except' => [
                     '/login',
                     'admin-login',
-
-
+                    'backend-api/*'
                 ]
             ]
         ],
