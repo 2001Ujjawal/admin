@@ -34,7 +34,7 @@ class JwtHelper
         $token = self::generateJWTtoken($userData);
 
         $cookie = new Cookie(
-            getenv('COOKIE_NAME') ?? 'access_token',
+            getenv('COOKIE_NAME') ?? 'jwt_token',
             $token,
             [
                 'expires'  => time() + 3600,

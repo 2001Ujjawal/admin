@@ -21,7 +21,7 @@ class CommonController extends BaseController
         $this->sessionService = new SessionService();
     }
 
-    public function getLoggedUserDetails()
+    public function getLoggedUserDetails(): array
     {
         $request = \Config\Services::request();
         $getCookiesToken = $request->getCookie('access_token');

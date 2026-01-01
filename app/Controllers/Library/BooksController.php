@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Library;
 
 use App\Controllers\CommonController;
 
@@ -25,10 +25,10 @@ class BooksController extends CommonController
             'sidebar' => 'books'
         ];
         // prt($sidebar) ; 
-        return  view(HEADER, $headerData) .
-            view(NAVBAR) .
-            view(SIDEBAR, $sidebar) .
-            view('admin/books') .
-            view(FOOTER);
+        return  view(LIBRARY_HEADER, $headerData) .
+            view(LIBRARY_NAVBAR) .
+            view(LIBRARY_SIDEBAR, $sidebar) .
+            view('library/books') .
+            view(LIBRARY_FOOTER);
     }
 }

@@ -5,12 +5,26 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+
+$routes->options('(:any)', function ($any) {
+    $response = service('response');
+    $response->setHeader('Access-Control-Allow-Origin', '*');
+    $response->setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    $response->setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization');
+    return $response->setStatusCode(200);
+});
 $routes->get('/', 'Home::index');
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('login', 'AuthController::index');
     $routes->post('admin-login', 'AuthController::authLogin');
     $routes->post('logout', 'AuthController::logout');
+
+    $routes->group('libraries', ['namespace' => 'App\Controllers\Library'], function ($routes) {
+        $routes->get('login', 'LibraryController::loginPageView');
+        $routes->get('books', 'BooksController::index');
+        $routes->get('dashboard', 'DashboardController::index');
+    });
 });
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
@@ -28,6 +42,8 @@ $routes->group('', function ($routes) {
             $routes->get('(:any)', 'UserApiController::userList/$1');
         });
         $routes->group('libraries', ['namespace' => 'App\Controllers\Apis'], function ($routes) {
+            $routes->post('login', 'LibraryApiController::login');
+            $routes->post('logout', 'LibraryApiController::logout');
             $routes->post('/', 'LibraryApiController::addLibrary');
         });
     });

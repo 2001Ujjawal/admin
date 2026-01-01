@@ -1,47 +1,42 @@
 <?php
 
-
 namespace App\Models;
 
 use CodeIgniter\Model;
 
 class LibraryModel extends Model
 {
-
     protected $table = 'library';
-    protected $primaryKey = 'id';
-
-    protected $allowedFields = [
+    protected $primaryKey   = 'id';
+    protected $allowedFields  = [
         'uid',
         'name',
         'email',
+        'address',
+        'password',
         'phone_no',
+        'created_by',
+        'created_at',
         'type',
         'reg_no',
-        'address',
-        'created_at',
-        'created_by'
+        'library_user_type'
     ];
+
 
     protected $validationRules = [
-        'name' => 'required|min_length[3]|max_length[30]|alpha_numeric_space',
-        'email' => 'required|valid_email|is_unique[library.email]',
-        'phone_no' => 'required|numeric|min_length[10]|max_length[15]|is_unique[library.phone_no]',
-        'reg_no' => 'required|alpha_numeric|max_length[50]|is_unique[library.reg_no]',
-        'type' => 'required',
-        'address' => 'required'
+        'name' => 'required',
+        'phone_no' => 'required',
+        'reg_no'    => 'required',
+        'email'        => 'required|max_length[254]|valid_email|is_unique[library.email]',
     ];
-
     protected $validationMessages = [
         'email' => [
-            'is_unique' => 'Sorry. That email has already been taken.',
-        ],
-        'phone_no' => [
-            'is_unique' => 'Phone number already exists.',
-        ],
-        'reg_no' => [
-            'is_unique' => 'Registration number already exists.',
+            'is_unique' => 'Sorry. That email has already been taken. Please choose another.',
         ],
     ];
 
+    public function checkLibraryExits(string $email): ?object
+    {
+        return $this->where('email', $email)->get()->getRow();
+    }
 }

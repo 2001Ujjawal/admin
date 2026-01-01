@@ -1,22 +1,19 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Library;
 
 use App\Controllers\CommonController;
 
 
 class LibraryController extends CommonController
 {
-    protected $loggedUserValue;
+    protected array $loggedUserValue;
 
-    public function __construct()
-    {
-        $this->loggedUserValue =  $this->getLoggedUserDetails();
-    }
+    public function __construct() {}
 
     public function index()
     {
-
+        $this->loggedUserValue =  $this->getLoggedUserDetails();
         $headerData = [
             'pageTitle' => 'Libraries',
             'metaTitle' => 'admin',
