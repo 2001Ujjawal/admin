@@ -93,3 +93,4 @@ define('LIBRARY_HEADER', 'library/template/header');
 define('LIBRARY_NAVBAR', 'library/template/nav');
 define('LIBRARY_SIDEBAR', 'library/template/sidebar');
 define('LIBRARY_FOOTER', 'library/template/footer');
+define('LIBRARY_LOGIN_URL', 'library/login');
