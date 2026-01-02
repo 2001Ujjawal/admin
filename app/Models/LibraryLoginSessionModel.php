@@ -23,11 +23,25 @@ class LibraryLoginSessionModel extends Model
     public function loginSessionCount(string $libraryId): int
     {
         $countConditions = [
-            'library_id' => $libraryId ,
+            'library_id' => $libraryId,
             'status'     => STATUS_ACTIVE,
-            'is_login'   => 1 
+            'is_login'   => 1
         ];
         $countLibraryAllSession = $this->where($countConditions)->countAllResults();
         return $countLibraryAllSession;
+    }
+
+
+    public function logout(array $logoutPayload): bool
+    {
+        $updateValues = [
+            'is_login' => 0
+        ];
+        $logout = $this->set($updateValues)->where($logoutPayload)->update();
+
+        if (!$logout) {
+            return false;
+        }
+        return true;
     }
 }

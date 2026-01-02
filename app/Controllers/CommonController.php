@@ -21,16 +21,20 @@ class CommonController extends BaseController
         $this->sessionService = new SessionService();
     }
 
-    public function getLoggedUserDetails(): array
+    public function getLoggedUserDetails(string $requestUrl = 'admin'): ?array
     {
         $request = \Config\Services::request();
-        $getCookiesToken = $request->getCookie('access_token');
+        $getCookiesToken = $request->getCookie(getenv('COOKIE_NAME'));
         if (empty($getCookiesToken)) {
             $this->sessionService->error('Token expired !! ');
+            if ($requestUrl === 'library') {
+                return redirect()->to(LIBRARY_LOGIN_URL);
+            }
             return redirect()->to(LOGIN_URL);
         }
         $loggedUserValue = JwtHelper::verifyToken($getCookiesToken);
         $result = ['userDetails' => $loggedUserValue->data ?? []];
         return   $result;
     }
+    
 }

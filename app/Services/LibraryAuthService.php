@@ -62,10 +62,10 @@ class LibraryAuthService
         $libraryAuthenticationValue = (bool) $librarySettingDetails->is_two_setup_authentication;
         $totalAllowLoginDevice = (int) $librarySettingDetails->allow_login_device ?? 1;
 
-        // if ($totalAllowLoginDevice <= $totalLibraryLoginSession) {
-        //     $convertNumberToWords = NumberToWordsHelper::convertNumber($totalAllowLoginDevice);
-        //     return ResponseHelper::error(400, "Only allow {$convertNumberToWords} device", ['errors' => 'its already login']);
-        // }
+        if ($totalAllowLoginDevice <= $totalLibraryLoginSession) {
+            $convertNumberToWords = NumberToWordsHelper::convertNumber($totalAllowLoginDevice);
+            return ResponseHelper::error(400, "Only allow {$convertNumberToWords} device", ['errors' => 'its already login']);
+        }
 
         $checkTwoSetupAuthenticationIsEnable = $this->checkTwoSetupAuthentication(
             $libraryAuthenticationValue,
@@ -74,16 +74,20 @@ class LibraryAuthService
             $email
         );
 
-        $loginSession = $this->createLoginSession($email, $phoneNo, $libraryId);
-        if (!$loginSession['loginSessionId']) {
-            return ResponseHelper::error(400, 'Login Failed');
-        }
+
         $isTwoFactorAuthEnabled = $checkTwoSetupAuthenticationIsEnable['value'] ?? false;
 
         if ($isTwoFactorAuthEnabled === false) {
+
+            $loginSession = $this->createLoginSession($email, $phoneNo, $libraryId);
+            if (!$loginSession['loginSessionId']) {
+                return ResponseHelper::error(400, 'Login Failed');
+            }
             $cookieTokenPayload =  [
+                'userId' => $library->uid ?? null,
                 'name' => $library->name ?? null,
-                'user_type' => $library->library_user_type,
+                'loginSessionId' => $loginSession['loginSessionId'],
+                'userType' => $library->library_user_type,
             ];
             $cookieTokenGenerate = JwtHelper::setCookieToken($cookieTokenPayload);
             if (!$cookieTokenGenerate) {
@@ -91,15 +95,13 @@ class LibraryAuthService
             }
         }
 
-        $loginLibraryData = [
-            'libraryId' => $libraryId,
-            'loginSessionId' => $loginSession['loginSessionId'],
-            'twoSetupAuthentication' => $isTwoFactorAuthEnabled,
-        ];
         return ResponseHelper::success(
             $checkTwoSetupAuthenticationIsEnable['statusCode'],
             $checkTwoSetupAuthenticationIsEnable['message'],
-            ['loginUserData' => $loginLibraryData ?? null]
+            [
+                'twoSetupAuthentication' => $isTwoFactorAuthEnabled,
+                'loginUserData' => $cookieTokenPayload ?? null
+            ]
         );
     }
 
@@ -175,8 +177,31 @@ class LibraryAuthService
         ];
     }
 
+    public function logout(array $requestData)
+    {
+        $validated = checkValidationRulesHelper::validateData('logoutValidationRules', $requestData);
 
+        if (!$validated['status']) {
+            return ResponseHelper::error(422, $validated['first_error'], $validated['errors']);
+        }
 
+        $logoutPayload = [
+            'uid' => $requestData['library_login_session_id'],
+            'library_id' => $requestData['library_id']
+        ];
 
-    public function logout(array $requestData) {}
+        $logout = $this->libraryLoginSessionModel->logout($logoutPayload);
+
+        if (!$logout) {
+            return ResponseHelper::error(400, 'Failed');
+        }
+        $response = service('response');
+        $response->deleteCookie(
+            getenv('COOKIE_NAME'),
+            '',
+            '/'
+        );
+        session()->destroy();
+        return ResponseHelper::success(HTTP_OK, 'User Logout successfully');
+    }
 }

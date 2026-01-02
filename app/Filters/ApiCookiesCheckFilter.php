@@ -34,9 +34,8 @@ class ApiCookiesCheckFilter implements FilterInterface
             $secret = getenv('JWT_PRIVATE_KEY') ?: 'your_jwt_secret_key';
 
             $decoded = JWT::decode($jwt, new Key($secret, 'HS256'));
-            // prt($decoded) ;
-            // You can optionally assign this to request
-            $request->userData = $decoded;
+            $decodeTokenValue = $decoded->data ?? null;
+            
         } catch (\Exception $e) {
             return service('response')
                 ->setStatusCode(401)

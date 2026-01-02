@@ -3,16 +3,16 @@
 namespace App\Controllers\Apis;
 
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\{JwtHelper};
 
 class BaseApiController extends ResourceController
 {
     protected $format = 'json';
 
+    public function __construct() {}
 
 
-
-
-    protected function success($success, $message, ?array $data = null, $code = 200) : object
+    protected function success($success, $message, ?array $data = null, $code = 200): object
     {
         return (object) [
             'success'  => $success,
@@ -22,7 +22,7 @@ class BaseApiController extends ResourceController
         ];
     }
 
-    protected function error($success, $message, $code = 400, $errors = null) : object
+    protected function error($success, $message, $code = 400, $errors = null): object
     {
         return (object) [
             'success'  => $success,
@@ -32,7 +32,7 @@ class BaseApiController extends ResourceController
         ];
     }
 
-    protected function sendApiResponse(object $resp) 
+    protected function sendApiResponse(object $resp)
     {
 
         $response = [
@@ -52,5 +52,28 @@ class BaseApiController extends ResourceController
         }
 
         return $this->respond($response, $resp->httpStatus ?? 500);
+    }
+
+
+    public function getLoggedUserDetails(): ?array
+    {
+        $request = \Config\Services::request();
+        $getCookiesToken = $request->getCookie(getenv('COOKIE_NAME'));
+        if (empty($getCookiesToken)) {
+            $error = (object) [
+                'httpStatus' => 401,
+                'message' => 'Not found any token'
+            ];
+            return $this->sendApiResponse($error);
+        }
+        $loggedUserValue = JwtHelper::verifyToken($getCookiesToken);
+        $result = ['userDetails' => $loggedUserValue->data ?? []];
+        return   $result;
+    }
+
+    public function loggedUserId(): string
+    {
+        $loggedUserDetails = $this->getLoggedUserDetails();
+        return $loggedUserDetails['userDetails']->userId;
     }
 }

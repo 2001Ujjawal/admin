@@ -8,10 +8,10 @@ use App\Controllers\CommonController;
 class DashboardController extends CommonController
 {
     protected $loggedUserValue;
-
+    protected string $requestUrl = 'library';
     public function __construct()
     {
-        $this->loggedUserValue =  $this->getLoggedUserDetails();
+        $this->loggedUserValue =  $this->getLoggedUserDetails($this->requestUrl);
     }
     public function index()
     {

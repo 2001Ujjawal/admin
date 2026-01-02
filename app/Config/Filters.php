@@ -14,6 +14,7 @@ use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\CookiesCheckFilter;
 use App\Filters\ApiCookiesCheckFilter;
+use App\Filters\LibraryWebTokenCheckFilter;
 
 
 class Filters extends BaseFilters
@@ -39,7 +40,8 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'cookieCheck'   => CookiesCheckFilter::class,
         'cors' => \App\Filters\CorsFilter::class,
-        'apiTokenCheck' => ApiCookiesCheckFilter::class
+        'apiTokenCheck' => ApiCookiesCheckFilter::class,
+        'libraryWebTokenCheckFilter' => LibraryWebTokenCheckFilter::class
     ];
 
     /**
@@ -89,7 +91,7 @@ class Filters extends BaseFilters
                     '/login',
                     'admin-login',
                     'backend-api/*',
-                    'libraries/login'
+                    'libraries/*'
                 ]
             ]
         ],
@@ -127,8 +129,13 @@ class Filters extends BaseFilters
     public array $filters = [
         'apiTokenCheck' => [
             'before' => [
-                'backend-api/libraries',
                 'backend-api/libraries/logout'
+            ]
+        ],
+        'libraryWebTokenCheckFilter' => [
+            'before' => [
+                'libraries/dashboard',
+                'libraries/books'
             ]
         ]
     ];

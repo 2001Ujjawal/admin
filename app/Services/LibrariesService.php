@@ -61,4 +61,6 @@ class LibrariesService
             'hashPassword' => $hashPassword
         ];
     }
+
+    
 }

@@ -223,7 +223,7 @@
                 const loginData = response.data;
                 const dashboardUrl = "<?= base_url('libraries/dashboard') ?>";
                 if (response.success && response.httpStatus === 200) {
-                    if (loginData.loginUserData.twoSetupAuthentication === false) {
+                    if (loginData.twoSetupAuthentication === false) {
                         localStorage.setItem(
                             'loggedUserDetails',
                             JSON.stringify(loginData.loginUserData)
