@@ -13,7 +13,24 @@ $routes->options('(:any)', function ($any) {
     $response->setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization');
     return $response->setStatusCode(200);
 });
+/**
+ * admin routes
+ */
 $routes->get('/', 'Home::index');
+$routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->group('dashboard', ['namespace' => 'App\Controllers'], function ($routes) {
+        $routes->get('/', 'DashboardController::index');
+    });
+    $routes->group('libraries', ['namespace' => 'App\Controllers'], function ($routes) {
+        $routes->get('/', 'LibraryController::index');
+    });
+});
+
+
+
+/**
+ * Libraries admin routes
+ */
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('login', 'AuthController::index');
@@ -28,14 +45,7 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     });
 });
 
-$routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
-    $routes->group('dashboard', ['namespace' => 'App\Controllers'], function ($routes) {
-        $routes->get('/', 'DashboardController::index');
-    });
-    $routes->group('libraries', ['namespace' => 'App\Controllers'], function ($routes) {
-        $routes->get('/', 'LibraryController::index');
-    });
-});
+
 
 
 /**

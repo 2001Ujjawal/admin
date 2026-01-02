@@ -32,10 +32,9 @@ class CookiesCheckFilter implements FilterInterface
     {
         //
         $sessionService = new SessionService();
-        $jwt = $request->getCookie('access_token');
+        $jwt = $request->getCookie(getenv('COOKIE_NAME'));
 
         if (empty($jwt)) {
-            // $sessionService->error('Token expired ! please login again');
             return redirect()->to('/login');
         }
 
