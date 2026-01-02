@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\{
+    LibraryLoginSessionModel,
     LibraryModel as LM
 };
 use App\Helpers\ResponseHelper;
@@ -10,10 +11,11 @@ use App\Helpers\ResponseHelper;
 class LibrariesService
 {
     protected LM $libraryModel;
-
+    protected  LibraryLoginSessionModel $libraryLoginSessionModel;
     public function __construct()
     {
         $this->libraryModel = new LM();
+        $this->libraryLoginSessionModel = new LibraryLoginSessionModel();
     }
 
     public function addLibrary(array $requestData): object
@@ -62,5 +64,26 @@ class LibrariesService
         ];
     }
 
-    
+    public function sessionListByLibraryId(string $libraryId, ?array $getRequestData)
+    {
+        $sessionData = $this->libraryLoginSessionModel->sessionListByLibraryId($libraryId, $getRequestData);
+
+
+        $result = array_map(function ($s) {
+            $s['login_session_id'] = $s['uid'];
+            $s['login_details'] = json_decode($s['login_details']);
+            return $s;
+        }, $sessionData['loginSessions']);
+
+
+
+        return ResponseHelper::success(
+            HTTP_OK,
+            'Login session list ',
+            [
+                'loginSessionsList' => $result,
+                'pagination' => $sessionData['pagination']
+            ]
+        );
+    }
 }

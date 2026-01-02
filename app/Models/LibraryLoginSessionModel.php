@@ -44,4 +44,51 @@ class LibraryLoginSessionModel extends Model
         }
         return true;
     }
+
+
+    public function sessionListByLibraryId(string $libraryId, ?array $filters): array
+    {
+        $builder = $this->builder();
+        $builder->where('library_id', $libraryId);
+
+        if (!empty($filters['is_login'])) {
+            $builder->where('is_login', $filters['is_login']);
+        }
+        if (!empty($filters['status'])) {
+            $builder->where('status', $filters['status']);
+        }
+
+        $builder->orderBy('created_at', $filters['order_by_created_at']);
+        $pagination = $this->applyPagination($builder, $filters);
+        $loginSessions = $builder->get()->getResultArray();
+
+        return [
+            'loginSessions'      => $loginSessions,
+            'pagination' => $pagination,
+        ];
+    }
+
+
+    public  function applyPagination($builder, array $filters)
+    {
+        $page     = max(1, (int)($filters['pageNumber'] ?? 1));
+        $pageSize = max(1, min(100, (int)($filters['pageSize'] ?? 10)));
+
+      
+        $countBuilder = clone $builder;
+        $totalRecords = $countBuilder->countAllResults();
+
+        $totalPages = (int) ceil($totalRecords / $pageSize);
+        $offset     = ($page - 1) * $pageSize;
+
+        
+        $builder->limit($pageSize, $offset);
+
+        return [
+            'pageNumber'  => $page,
+            'pageSize'    => $pageSize,
+            'totalPages'  => $totalPages,
+            'totalRecords' => $totalRecords,
+        ];
+    }
 }

@@ -27,12 +27,6 @@ class LibraryApiController extends BaseApiController
         $libraryCreation = $this->libraryService->addLibrary($requestData);
         return $this->sendApiResponse($libraryCreation);
     }
-    public function login()
-    {
-        $requestData = $this->request->getJSON(true) ?? [];
-        $login = $this->libraryAuthService->login($requestData);
-        return $this->sendApiResponse($login);
-    }
 
     public function logout()
     {
@@ -41,5 +35,10 @@ class LibraryApiController extends BaseApiController
         return $this->sendApiResponse($logout);
     }
 
-    public function loginSessionList() {}
+    public function loginSessionList()
+    {
+        $getRequest = $this->request->getGet();
+        $loginSessionList = $this->libraryService->sessionListByLibraryId($this->loggedUserId, $getRequest);
+        return $this->sendApiResponse($loginSessionList);
+    }
 }
