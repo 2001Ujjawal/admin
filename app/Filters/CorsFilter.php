@@ -39,7 +39,6 @@ class CorsFilter implements FilterInterface
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        //prt("After CORS Filter");
         return $response;
     }
 }
