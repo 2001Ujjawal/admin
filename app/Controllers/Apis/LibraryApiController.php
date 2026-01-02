@@ -24,7 +24,6 @@ class LibraryApiController extends BaseApiController
     }
     public function login()
     {
-
         $requestData = $this->request->getJSON(true) ?? [];
         $login = $this->libraryAuthService->login($requestData);
         return $this->sendApiResponse($login);
@@ -32,6 +31,7 @@ class LibraryApiController extends BaseApiController
 
     public function logout()
     {
+        return "hello world form logout" ;
         $requestData = $this->request->getJSON(true) ?? [];
         $logout = $this->libraryAuthService->logout($requestData);
         return $this->sendApiResponse($logout);

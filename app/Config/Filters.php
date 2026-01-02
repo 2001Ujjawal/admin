@@ -13,6 +13,7 @@ use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\CookiesCheckFilter;
+use App\Filters\ApiCookiesCheckFilter;
 
 
 class Filters extends BaseFilters
@@ -38,7 +39,7 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'cookieCheck'   => CookiesCheckFilter::class,
         'cors' => \App\Filters\CorsFilter::class,
-
+        'apiTokenCheck' => ApiCookiesCheckFilter::class
     ];
 
     /**
@@ -123,5 +124,12 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'apiTokenCheck' => [
+            'before' => [
+                'backend-api/libraries',
+                'backend-api/libraries/logout'
+            ]
+        ]
+    ];
 }
