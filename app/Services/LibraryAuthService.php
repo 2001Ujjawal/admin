@@ -62,10 +62,10 @@ class LibraryAuthService
         $libraryAuthenticationValue = (bool) $librarySettingDetails->is_two_setup_authentication;
         $totalAllowLoginDevice = (int) $librarySettingDetails->allow_login_device ?? 1;
 
-        if ($totalAllowLoginDevice <= $totalLibraryLoginSession) {
-            $convertNumberToWords = NumberToWordsHelper::convertNumber($totalAllowLoginDevice);
-            return ResponseHelper::error(400, "Only allow {$convertNumberToWords} device", ['errors' => 'its already login']);
-        }
+        // if ($totalAllowLoginDevice <= $totalLibraryLoginSession) {
+        //     $convertNumberToWords = NumberToWordsHelper::convertNumber($totalAllowLoginDevice);
+        //     return ResponseHelper::error(403, "Only allow {$convertNumberToWords} device", ['loginError' => 'its already login']);
+        // }
 
         $checkTwoSetupAuthenticationIsEnable = $this->checkTwoSetupAuthentication(
             $libraryAuthenticationValue,
@@ -81,7 +81,7 @@ class LibraryAuthService
 
             $loginSession = $this->createLoginSession($email, $phoneNo, $libraryId);
             if (!$loginSession['loginSessionId']) {
-                return ResponseHelper::error(400, 'Login Failed');
+                return ResponseHelper::error(403, 'Login Failed');
             }
             $cookieTokenPayload =  [
                 'userId' => $library->uid ?? null,
@@ -94,7 +94,7 @@ class LibraryAuthService
                 return ResponseHelper::error(500, 'Token creation failed');
             }
         }
-
+        
         return ResponseHelper::success(
             $checkTwoSetupAuthenticationIsEnable['statusCode'],
             $checkTwoSetupAuthenticationIsEnable['message'],
@@ -111,6 +111,10 @@ class LibraryAuthService
         string $libraryUid
     ): array {
 
+        $librarySessionCount = $this->libraryLoginSessionModel->loginSessionCount($libraryUid);
+
+        $firstTimeInsertTypeCheck = ($librarySessionCount === 0 || $librarySessionCount === null) ? "master" : null;
+
         $loginSessionUid = generateUid();
         $loginSessionPayload = [
             'uid' => $loginSessionUid,
@@ -118,6 +122,7 @@ class LibraryAuthService
             'phone_no' => $phoneNo,
             'library_id' => $libraryUid,
             'login_details' => json_encode($this->getLoginDetails()) ?? null,
+            'type' => $firstTimeInsertTypeCheck
         ];
 
         if (!$this->libraryLoginSessionModel->insert($loginSessionPayload)) {
@@ -138,6 +143,8 @@ class LibraryAuthService
             'browser'    => $agent->getBrowser() . ' ' . $agent->getVersion(),
             'platform'   => $agent->getPlatform(),
             'login_time' => Time::now()->toDateTimeString(),
+            'device_type' => null,
+            'device_id'   => null,
         ];
         return $loginDetails;
     }
