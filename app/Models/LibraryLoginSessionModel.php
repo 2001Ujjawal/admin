@@ -17,7 +17,8 @@ class LibraryLoginSessionModel extends Model
         'is_login',
         'login_details',
         'created_at',
-        'status'
+        'status',
+        'type'
     ];
 
 

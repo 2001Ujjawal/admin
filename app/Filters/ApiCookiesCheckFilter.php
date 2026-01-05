@@ -2,7 +2,6 @@
 
 namespace App\Filters;
 
-
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Filters\FilterInterface;
@@ -15,47 +14,41 @@ class ApiCookiesCheckFilter implements FilterInterface
     {
         $jwt = $request->getCookie('jwt_token');
 
-        // Or use your constant TOKEN_NAME_JWT
-        if (empty($jwt)) {
-            return service('response')
-                ->setStatusCode(401)
-                ->setJSON([
-                    'success' => false,
-                    "httpStatus" => 401,
-                    "messsage" => "Jwt Cookie Token Expired",
-                    'errors'  => [
-                        'cookieToken' => 'Unauthorized access: Token missing'
-                    ]
-
-                ]);
+        if (!$jwt) {
+            return $this->unauthorized('JWT token missing');
         }
+
+        $secret = getenv('JWT_PRIVATE_KEY') ?: 'your_jwt_secret_key';
 
         try {
-            $secret = getenv('JWT_PRIVATE_KEY') ?: 'your_jwt_secret_key';
-
             $decoded = JWT::decode($jwt, new Key($secret, 'HS256'));
-            $decodeTokenValue = $decoded->data ?? null;
-            
-        } catch (\Exception $e) {
-            return service('response')
-                ->setStatusCode(401)
-                ->setJSON([
-                    'success' => false,
-                    "httpStatus" => 500,
-                    "messsage" => "Jwt Cookie Token Expired ",
-                    'errors'  => [
-                        'cookieToken' => 'Unauthorized access: Token missing',
-                        'e' => $e
-                    ]
 
-                ]);
+            // $request->setGlobal('auth_user', $decoded->data ?? null);
+
+        } catch (\Throwable $e) {
+
+            return $this->unauthorized('Invalid JWT token');
         }
-
-        return; // Continue the request
+        return;
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        // No after-processing needed
+        // no-op
+    }
+
+
+    protected function unauthorized(string $message)
+    {
+        return service('response')
+            ->setStatusCode(401)
+            ->setJSON([
+                'success'    => false,
+                'httpStatus' => 401,
+                'message'    => $message,
+                'errors'     => [
+                    'auth' => $message
+                ]
+            ]);
     }
 }

@@ -139,7 +139,9 @@
           [{
             font: []
           }, {
-            size: []
+            size: [
+              
+            ]
           }],
           ["bold", "italic", "underline", "strike"],
           [{

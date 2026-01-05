@@ -212,6 +212,16 @@
             email: email,
             password: password
         };
+        const deviceInfo = {
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            language: navigator.language,
+            screen: `${screen.width}x${screen.height}`,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        };
+
+        console.log("================== deviceInfo ", JSON.stringify(deviceInfo));
+
 
         $.ajax({
             type: "POST",
@@ -240,6 +250,9 @@
             },
             error: function(xhr) {
                 notificationMessage(xhr.responseJSON.message);
+                console.log("================ error Response", xhr);
+
+
                 console.error(xhr.responseJSON);
             }
         });

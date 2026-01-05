@@ -10,10 +10,10 @@ use Exception;
 
 class JwtHelper
 {
+
     private static function generateJWTtoken(array $userData): string
     {
         $key = getenv('JWT_PRIVATE_KEY');
-        $expireTime = 3600;
 
         if (strlen($key) < 32) {
             throw new Exception('JWT key must be at least 32 characters');
@@ -22,7 +22,7 @@ class JwtHelper
         $payload = [
             'iss'  => base_url(),
             'iat'  => time(),
-            'exp'  => time() + $expireTime,
+            'exp'  => time() + getenv('JWT_TOKEN_EXPIRE_TIME'),
             'data' => $userData
         ];
 
@@ -37,7 +37,7 @@ class JwtHelper
             getenv('COOKIE_NAME') ?? 'jwt_token',
             $token,
             [
-                'expires'  => time() + 3600,
+                'expires'  => time() + getenv('JWT_TOKEN_EXPIRE_TIME'),
                 'httponly' => true,   // MUST be true
                 'secure'   => false,  // true in HTTPS
                 'path'     => '/',
@@ -52,6 +52,4 @@ class JwtHelper
         $key = getenv('JWT_PRIVATE_KEY');
         return JWT::decode($token, new Key($key, 'HS256'));
     }
-
-    
 }
