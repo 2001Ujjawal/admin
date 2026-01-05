@@ -647,27 +647,3 @@
 </main>
 
 
-<script>
-  
-    const data = {
-        "name": "ujjawal",
-        "last_name": "sharma",
-        "email": "ujjawal.sharma@eslozmail.com",
-        "phone_no": "6290285826"
-    }
-    async function loadUsers() {
-        try {
-            let response = await HandleAjaxRequest(
-                'http://localhost:8080/backend-api/users/12233',
-
-                '',// JSON.stringify(data),
-                'GET'
-            );
-            console.log("STATUS:", response.status);
-            console.log("DATA:", response.data);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-    loadUsers();
-</script>

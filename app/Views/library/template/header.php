@@ -28,8 +28,9 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
-
+  <!-- loader css -->
+  <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
+  <!-- == -->
   <!-- Template Main CSS File -->
   <link href="<?= base_url() ?>assets/css/style.css" rel="stylesheet">
 
@@ -44,10 +45,30 @@
 
 <body>
   <script>
+    const loginUrl = "<?= base_url('libraries/login') ?>";
+    /**
+     * local storage data 
+     */
+    const loggedUserDetailsRaw = localStorage.getItem('loggedUserDetails');
+
+    let loggedUserDetails = null;
+
+    if (loggedUserDetailsRaw === null) {
+      console.error('Invalid JSON in loggedUserDetails');
+      setTimeout(function() {
+        window.location.href = loginUrl;
+      }, 1500);
+    }
+
+    loggedUserDetails = JSON.parse(loggedUserDetailsRaw);
+    let userId = loggedUserDetails.userId;
+    let loginSessionId = loggedUserDetails.loginSessionId;
+    console.log('===================== loggedUserDetails:', loggedUserDetails);
+
     /**
      * url string 
      * data array or object
-     * method all type HTTPS method(GET , POST , PATCH ,PUT , DELETE)
+     * accepts method(GET , POST , PATCH ,PUT , DELETE)
      * !test report 
      *      -- 
      */
@@ -63,6 +84,7 @@
           success: function(response) {
             resolve({
               status: response.success ?? false,
+              statusCode: response.httpStatus ?? 405,
               message: response.message,
               data: response.data ?? null,
               errors: response.errors ?? null,
@@ -70,7 +92,7 @@
           },
           error: function(xhr, ajaxOptions, thrownError) {
             if (xhr.status === 401) {
-              window.location.href = '<?= base_url("/login"); ?>';
+              window.location.href = loginUrl;
             }
             reject(xhr.responseJSON);
           }
@@ -78,3 +100,7 @@
       });
     }
   </script>
+
+  <div id="global-loader">
+    <div class="loader-spinner"></div>
+  </div>

@@ -26,6 +26,7 @@
     <link href="<?= base_url('assets/vendor/simple-datatables/style.css') ?>" rel="stylesheet">
     <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <style>
@@ -238,9 +239,10 @@
                             'loggedUserDetails',
                             JSON.stringify(loginData.loginUserData)
                         );
+                       
                         setTimeout(() => {
                             window.location.href = dashboardUrl;
-                        }, 1500);
+                        }, 1200);
                     } else {
                         const otpValidationDiv = document.getElementById('otpValidationDiv');
                         loginFromDiv.css("display", "none");
@@ -258,7 +260,6 @@
         });
     });
 </script>
-
 <script>
     function notificationMessage(message, type = 'error') {
         let bgColor = "";

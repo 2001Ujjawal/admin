@@ -212,14 +212,10 @@
                     </li>
 
                     <li>
-                        <form action="<?= base_url('logout') ?>" method="post" class="d-inline">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="dropdown-item d-flex align-items-center bg-transparent border-0">
-                                <i class="bi bi-box-arrow-right"></i>
-                                <span class="ms-2">Sign Out</span>
-                            </button>
-                        </form>
-
+                        <button onclick="logout()" type="button" class="dropdown-item d-flex align-items-center bg-transparent border-0">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span class="ms-2">Sign Out</span>
+                        </button>
                     </li>
 
                 </ul><!-- End Profile Dropdown Items -->
@@ -231,10 +227,31 @@
 </header>
 
 <script>
-    let todayTotalNotification = $('#todayTotalNotification');
-    todayTotalNotification.text(10);
-    console.log("todayTotalNotification:", todayTotalNotification);
-    // $(document).ready(function() {
-    // });
+    const logoutUrl = 'http://localhost:8080/backend-api/libraries/logout';
 
+    const logoutData = JSON.stringify({
+        "library_id": userId,
+        "library_login_session_id": loginSessionId
+    });
+
+    async function logout() {
+        try {
+            console.log('=============', logoutData);
+            let response = await HandleAjaxRequest(
+                logoutUrl,
+                logoutData,
+                'POST'
+            );
+            if (response.statusCode === 200 || response.status === true) {
+                localStorage.removeItem('loggedUserDetails');
+                setTimeout(() => {
+                    window.location.href = loginUrl;
+                }, 1000);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // logout();
 </script>
