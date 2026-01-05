@@ -16,6 +16,8 @@ $routes->options('(:any)', function ($any) {
 /**
  * admin routes
  */
+
+
 $routes->get('/', 'Home::index');
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('dashboard', ['namespace' => 'App\Controllers'], function ($routes) {
