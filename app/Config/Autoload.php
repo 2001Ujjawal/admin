@@ -89,6 +89,7 @@ class Autoload extends AutoloadConfig
      * @var list<string>
      */
     public $helpers = [
-        'common_helper_functions'
+        'common_helper_functions',
+        'api_log_helper_function'
     ];
 }
