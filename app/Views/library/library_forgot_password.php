@@ -121,7 +121,6 @@
             </section>
         </div>
 
-
     </main><!-- End #main -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     <!-- Vendor JS Files -->
@@ -139,6 +138,65 @@
 </body>
 
 <script>
+    const otpBoxes = document.querySelectorAll('.otp-box');
+    const otpValue = document.getElementById('otpValue');
+
+    otpBoxes.forEach((box, index) => {
+
+        // Only numbers + auto move
+        box.addEventListener('input', (e) => {
+            box.value = box.value.replace(/[^0-9]/g, '');
+
+            if (box.value && index < otpBoxes.length - 1) {
+                otpBoxes[index + 1].focus();
+            }
+
+            updateOtp();
+        });
+
+        // Backspace support
+        box.addEventListener('keydown', (e) => {
+            if (e.key === "Backspace" && !box.value && index > 0) {
+                otpBoxes[index - 1].focus();
+            }
+        });
+
+        // Paste support (1234)
+        box.addEventListener('paste', (e) => {
+            e.preventDefault();
+
+            const pasteData = e.clipboardData.getData('text').replace(/\D/g, '');
+            if (!pasteData) return;
+
+            pasteData.split('').forEach((num, i) => {
+                if (otpBoxes[i]) {
+                    otpBoxes[i].value = num;
+                }
+            });
+
+            updateOtp();
+            otpBoxes[Math.min(pasteData.length, otpBoxes.length) - 1].focus();
+        });
+    });
+
+    function updateOtp() {
+        let otp = '';
+        otpBoxes.forEach(box => otp += box.value);
+        otpValue.value = otp;
+    }
+    document.getElementById('otpSubmitForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (otpValue.value.length !== 4) {
+            notificationMessage('Please enter full 4-digit OTP');
+            return;
+        }
+
+        
+
+        // AJAX API call here
+    });
+
     let sendOtpFrom = $("#sendOtpFrom");
     console.log("=========sendOtpFrom", sendOtpFrom);
 
