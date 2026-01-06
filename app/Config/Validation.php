@@ -7,6 +7,7 @@ use CodeIgniter\Validation\StrictRules\CreditCardRules;
 use CodeIgniter\Validation\StrictRules\FileRules;
 use CodeIgniter\Validation\StrictRules\FormatRules;
 use CodeIgniter\Validation\StrictRules\Rules;
+use Illuminate\Support\Arr;
 
 class Validation extends BaseConfig
 {
@@ -48,7 +49,11 @@ class Validation extends BaseConfig
     ];
 
     public array $logoutValidationRules = [
-        'library_id' => 'required|string' , 
+        'library_id' => 'required|string',
         'library_login_session_id' => 'required|string',
+    ];
+
+    public array $otpSendValidationRules = [
+        'email' => 'required|valid_email'
     ];
 }

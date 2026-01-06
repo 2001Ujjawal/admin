@@ -3,6 +3,8 @@
 namespace Config;
 
 use CodeIgniter\Config\BaseService;
+use App\Services\EmailService;
+use App\Services\OtpService;
 
 /**
  * Services Configuration file.
@@ -29,4 +31,24 @@ class Services extends BaseService
      *     return new \CodeIgniter\Example();
      * }
      */
+
+    public static function emailService(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('emailService');
+        }
+
+        return new EmailService();
+    }
+
+    public static function otpService(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('otpService');
+        }
+
+        return new OtpService(
+            static::emailService()
+        );
+    }
 }

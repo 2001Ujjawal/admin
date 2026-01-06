@@ -57,7 +57,7 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 $routes->group('', function ($routes) {
     $routes->group('backend-api', ['namespace' => 'App\Controllers\Apis'], function ($routes) {
         $routes->post('libraries/login', 'LibraryLoginApiController::login');
-
+        $routes->post('libraries/otp-send', 'LibraryLoginApiController::sendOtp');
         $routes->post('libraries/', 'LibraryApiController::addLibrary');
 
         $routes->group('libraries', ['namespace' => 'App\Controllers\Apis', 'filter' => 'apiTokenCheck'], function ($routes) {
