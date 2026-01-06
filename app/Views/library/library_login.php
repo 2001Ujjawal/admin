@@ -70,16 +70,17 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12" style="padding-bottom: 10px;">
+                                        <div class="col-12" >
                                             <label for="yourPassword" class="form-label">Password</label>
                                             <input id="password" type="password" name="password" class="form-control">
+                                        </div>
+                                        <div class="col-12" style="padding-top:10px;">
+                                            <p style="text-align: right;" class=" small mb-0"><a href="<?= base_url('libraries/forgot-password') ?>">Forgot Password</a></p>
                                         </div>
                                         <div class="col-12">
                                             <button class="btn btn-primary w-100" type="submit">Login</button>
                                         </div>
-                                        <div class="col-12" style="padding-top:10px;">
-                                            <p class=" small mb-0">Don't have account? <a href="pages-register.html">Forgot Password</a></p>
-                                        </div>
+
                                     </form>
                                 </div>
 
@@ -239,7 +240,7 @@
                             'loggedUserDetails',
                             JSON.stringify(loginData.loginUserData)
                         );
-                       
+
                         setTimeout(() => {
                             window.location.href = dashboardUrl;
                         }, 1200);

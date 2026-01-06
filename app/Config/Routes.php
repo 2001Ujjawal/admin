@@ -40,6 +40,7 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('logout', 'AuthController::logout');
 
     $routes->get('libraries/login', 'Library\LibraryController::loginPageView');
+    $routes->get('libraries/forgot-password', 'Library\LibraryController::forgotPasswordView');
 
     $routes->group('libraries', ['namespace' => 'App\Controllers\Library', 'filter' => 'libraryWebTokenCheckFilter'], function ($routes) {
         $routes->get('books', 'BooksController::index');

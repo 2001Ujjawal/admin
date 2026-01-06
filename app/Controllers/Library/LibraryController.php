@@ -14,5 +14,8 @@ class LibraryController extends CommonController
     {
         return view('library/library_login');
     }
-  
+    public function forgotPasswordView()
+    {
+        return view('library/library_forgot_password');
+    }
 }
