@@ -1,5 +1,6 @@
 <?php
 
+use CodeIgniter\Controller;
 use CodeIgniter\Router\RouteCollection;
 
 /**
@@ -70,4 +71,5 @@ $routes->group('', function ($routes) {
 
 // cli command routes 
 
-$routes->cli('test-cli', 'CliController::index');
+
+$routes->resource('test', ['controller' => 'Apis\ResourceController']);

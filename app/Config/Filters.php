@@ -29,16 +29,16 @@ class Filters extends BaseFilters
      * or [filter_name => [classname1, classname2, ...]]
      */
     public array $aliases = [
-        'csrf'          => CSRF::class,
-        'toolbar'       => DebugToolbar::class,
-        'honeypot'      => Honeypot::class,
-        'invalidchars'  => InvalidChars::class,
+        'csrf' => CSRF::class,
+        'toolbar' => DebugToolbar::class,
+        'honeypot' => Honeypot::class,
+        'invalidchars' => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
         // 'cors'          => Cors::class,
-        'forcehttps'    => ForceHTTPS::class,
-        'pagecache'     => PageCache::class,
-        'performance'   => PerformanceMetrics::class,
-        'cookieCheck'   => CookiesCheckFilter::class,
+        'forcehttps' => ForceHTTPS::class,
+        'pagecache' => PageCache::class,
+        'performance' => PerformanceMetrics::class,
+        'cookieCheck' => CookiesCheckFilter::class,
         'cors' => \App\Filters\CorsFilter::class,
         'apiTokenCheck' => ApiCookiesCheckFilter::class,
         'libraryWebTokenCheckFilter' => LibraryWebTokenCheckFilter::class
@@ -84,10 +84,15 @@ class Filters extends BaseFilters
         'before' => [
             'cors',
             // 'honeypot',
-            'csrf' => ['except' => 'backend-api/*'],
+            'csrf' => [
+                'except' =>
+                    'backend-api/*',
+               
+            ],
             // 'invalidchars',
             'cookieCheck' => [
                 'except' => [
+                    'test',
                     '/login',
                     'admin-login',
                     'backend-api/*',
