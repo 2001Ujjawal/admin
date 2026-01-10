@@ -57,7 +57,7 @@ class AuthController extends CommonController
             return redirect()->back()->withInput();
         }
     }
-
+  
     public function logout()
     {
         $response = service('response');
