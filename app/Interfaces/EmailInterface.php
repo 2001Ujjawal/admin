@@ -4,5 +4,5 @@ namespace App\Interfaces;
 
 interface EmailInterface
 {
-    public function emailSend(string $email, int $otp);
+    public function emailSend(string|array $email,  string $subject,  string $message);
 }

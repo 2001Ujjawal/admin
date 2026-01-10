@@ -16,6 +16,8 @@ $routes->options('(:any)', function ($any) {
 /**
  * admin routes
  */
+
+
 $routes->get('/', 'Home::index');
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('dashboard', ['namespace' => 'App\Controllers'], function ($routes) {
@@ -38,6 +40,7 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->post('logout', 'AuthController::logout');
 
     $routes->get('libraries/login', 'Library\LibraryController::loginPageView');
+    $routes->get('libraries/forgot-password', 'Library\LibraryController::forgotPasswordView');
 
     $routes->group('libraries', ['namespace' => 'App\Controllers\Library', 'filter' => 'libraryWebTokenCheckFilter'], function ($routes) {
         $routes->get('books', 'BooksController::index');
@@ -54,7 +57,7 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
 $routes->group('', function ($routes) {
     $routes->group('backend-api', ['namespace' => 'App\Controllers\Apis'], function ($routes) {
         $routes->post('libraries/login', 'LibraryLoginApiController::login');
-
+        $routes->post('libraries/otp-send', 'LibraryLoginApiController::sendOtp');
         $routes->post('libraries/', 'LibraryApiController::addLibrary');
 
         $routes->group('libraries', ['namespace' => 'App\Controllers\Apis', 'filter' => 'apiTokenCheck'], function ($routes) {

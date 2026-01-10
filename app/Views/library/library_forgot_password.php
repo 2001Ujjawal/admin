@@ -50,47 +50,37 @@
 
                             <div class="d-flex justify-content-center py-4">
                                 <a href="index.html" class="logo d-flex align-items-center w-auto">
-                                    <img src="assets/img/logo.png" alt="">
+                                    <img src="<?= base_url('assets/img/logo.png') ?> " alt="">
                                     <span class="d-none d-lg-block">Library</span>
                                 </a>
                             </div><!-- End Logo -->
 
                             <div class="card mb-3">
-                                <div class="card-body" id="loginFromDiv">
+                                <div class="card-body" id="">
                                     <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                                        <p class="text-center small">Enter your username & password to login</p>
+                                        <h5 class="card-title text-center pb-0 fs-4">Forgot Password</h5>
                                     </div>
-                                    <form id="loginFromSubmit" action="#" method="" lass="row g-3 needs-validation" novalidate>
+
+                                    <form id="sendOtpFrom" action="#" method="" lass="row g-3 needs-validation" novalidate>
                                         <div class="col-12">
-                                            <label for="yourUsername" class="form-label">Username</label>
                                             <div class="input-group has-validation">
                                                 <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                                <input id="email" type="email" name="email" class="form-control">
+                                                <input placeholder="please enter your email" id="email" type="email" name="email" class="form-control">
                                             </div>
                                         </div>
 
-                                        <div class="col-12" >
-                                            <label for="yourPassword" class="form-label">Password</label>
-                                            <input id="password" type="password" name="password" class="form-control">
-                                        </div>
-                                        <div class="col-12" style="padding-top:10px;">
-                                            <p style="text-align: right;" class=" small mb-0"><a href="<?= base_url('libraries/forgot-password') ?>">Forgot Password</a></p>
-                                        </div>
-                                        <div class="col-12">
-                                            <button class="btn btn-primary w-100" type="submit">Login</button>
+                                        <div style="padding-top: 11px;" class="col-12">
+                                            <!-- <button class="btn btn-primary w-100" type="submit">Send Otp</button> -->
+                                            <button id="btnSendOtp" class="btn btn-primary w-100" type="submit" disabled>
+                                                <span style="display: none;" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="loginBtnSpinner"></span>
+                                                <span class="visually" id="btnSendOtpText">Send Otp</span>
+                                            </button>
                                         </div>
 
                                     </form>
-                                </div>
 
-                                <div class="card-body" id="otpValidationDiv" style="display: none;">
-                                    <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                                        <p class="text-center small">Enter your 4-digit OTP</p>
-                                    </div>
 
-                                    <form id="otpSubmitForm" novalidate>
+                                    <form id="otpSubmitForm" style="display: none;" novalidate>
                                         <div class="d-flex justify-content-center gap-2 mb-3 otp-inputs">
                                             <input type="text" class="form-control text-center otp-box" maxlength="1" inputmode="numeric">
                                             <input type="text" class="form-control text-center otp-box" maxlength="1" inputmode="numeric">
@@ -104,8 +94,23 @@
                                             <button class="btn btn-primary w-100" type="submit">
                                                 Verify OTP
                                             </button>
+                                            <div style="padding-top: 10px;">
+                                                <button class="btn btn-primary w-100" type="submit">
+                                                    Resend otp
+                                                </button>
+                                            </div>
+
                                         </div>
                                     </form>
+                                </div>
+
+                                <div class="card-body" id="otpVerifyDiv">
+                                    <!-- <div class="pt-4 pb-2">
+                                        <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+                                        <p class="text-center small">Enter your 4-digit OTP</p>
+                                    </div> -->
+
+
                                 </div>
 
 
@@ -115,7 +120,6 @@
                 </div>
             </section>
         </div>
-
 
     </main><!-- End #main -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -132,6 +136,7 @@
     <!-- Template Main JS File -->
     <script src="<?= base_url('') ?>assets/js/main.js"></script>
 </body>
+
 <script>
     const otpBoxes = document.querySelectorAll('.otp-box');
     const otpValue = document.getElementById('otpValue');
@@ -151,8 +156,6 @@
 
         // Backspace support
         box.addEventListener('keydown', (e) => {
-            console.log("============= Backspace ", e);
-
             if (e.key === "Backspace" && !box.value && index > 0) {
                 otpBoxes[index - 1].focus();
             }
@@ -189,100 +192,21 @@
             return;
         }
 
-        console.log("OTP Submitted:", otpValue.value);
+        
 
         // AJAX API call here
     });
 
+    let sendOtpFrom = $("#sendOtpFrom");
+    console.log("=========sendOtpFrom", sendOtpFrom);
 
-    $('#loginFromSubmit').submit(function(e) {
-        e.preventDefault();
+    let otpSubmitForm = document.getElementById("otpSubmitForm");
+    $(document).on('click', function() {
+        sendOtpFrom.css("display", "none");
 
-        let email = $('#email').val().trim();
-        let password = $('#password').val().trim();
-        let loginFromDiv = $('#loginFromDiv');
-
-        if (email === '') {
-            return notificationMessage('Email is required', 'error');
-        }
-
-        if (password === '') {
-            return notificationMessage('Password is required', 'error');
-        }
-
-        const loginPayload = {
-            email: email,
-            password: password
-        };
-        const deviceInfo = {
-            userAgent: navigator.userAgent,
-            platform: navigator.platform,
-            language: navigator.language,
-            screen: `${screen.width}x${screen.height}`,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        };
-
-        console.log("================== deviceInfo ", JSON.stringify(deviceInfo));
-
-
-        $.ajax({
-            type: "POST",
-            url: "http://localhost:8080/backend-api/libraries/login",
-            contentType: "application/json",
-            data: JSON.stringify(loginPayload),
-            success: function(response) {
-                notificationMessage(response.message, 'success');
-                const loginData = response.data;
-                const dashboardUrl = "<?= base_url('libraries/dashboard') ?>";
-                if (response.success && response.httpStatus === 200) {
-                    if (loginData.twoSetupAuthentication === false) {
-                        localStorage.setItem(
-                            'loggedUserDetails',
-                            JSON.stringify(loginData.loginUserData)
-                        );
-
-                        setTimeout(() => {
-                            window.location.href = dashboardUrl;
-                        }, 1200);
-                    } else {
-                        const otpValidationDiv = document.getElementById('otpValidationDiv');
-                        loginFromDiv.css("display", "none");
-                        otpValidationDiv.style.display = "block";
-                    }
-                }
-            },
-            error: function(xhr) {
-                notificationMessage(xhr.responseJSON.message);
-                console.log("================ error Response", xhr);
-
-
-                console.error(xhr.responseJSON);
-            }
-        });
+        otpSubmitForm.style.display = 'block';
+        // Code to execute when the 'event' occurs on the document
     });
-</script>
-<script>
-    function notificationMessage(message, type = 'error') {
-        let bgColor = "";
-
-        if (type === "success") {
-            bgColor = "linear-gradient(to right, #00b09b, #96c93d)";
-        } else if (type === "error") {
-            bgColor = "linear-gradient(to right, #ff5f6d, #ffc371)";
-        }
-
-        Toastify({
-            text: message,
-            duration: 3000,
-            close: true,
-            gravity: "top",
-            position: "right",
-            stopOnFocus: true,
-            style: {
-                background: bgColor,
-            },
-        }).showToast();
-    }
 </script>
 
 </html>
