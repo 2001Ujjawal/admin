@@ -27,7 +27,7 @@ class AuthController extends CommonController
     {
         $payload = [
             'userName' => 'Xyz',
-            'role'     => 'admin'
+            'role' => 'admin'
         ];
         try {
             $response = JwtHelper::setCookieToken($payload);
@@ -41,15 +41,19 @@ class AuthController extends CommonController
     public function authLogin()
     {
         $postRequest = $this->request->getPost();
+        api_log("info", "== admin login", $postRequest, 'admin_login_try_logs');
+
         $loginSuccess = $this->adminAuthService->login($postRequest);
-        if ($loginSuccess) {
-            $response =   JwtHelper::setCookieToken($postRequest);
+        if ($loginSuccess === true) {
+            $response = JwtHelper::setCookieToken($postRequest);
+            log_message('info' ,  'token');
             if (empty($response)) {
                 $this->sessionService->error('Token Creation Failed');
                 return redirect()->back()->withInput();
             }
             return $response->redirect('/dashboard');
         } else {
+            log_message("info", "== admin login");
             return redirect()->back()->withInput();
         }
     }
@@ -59,8 +63,8 @@ class AuthController extends CommonController
         $response = service('response');
         $response->deleteCookie(
             'access_token',
-            '',    
-            '/'  
+            '',
+            '/'
         );
         session()->destroy();
         return $response->redirect(base_url('login'));

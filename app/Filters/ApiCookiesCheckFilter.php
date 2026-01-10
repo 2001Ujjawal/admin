@@ -12,7 +12,7 @@ class ApiCookiesCheckFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        $jwt = $request->getCookie('jwt_token');
+        $jwt = $request->getCookie(getenv('COOKIE_NAME'));
 
         if (!$jwt) {
             return $this->unauthorized('JWT token missing');
@@ -43,10 +43,10 @@ class ApiCookiesCheckFilter implements FilterInterface
         return service('response')
             ->setStatusCode(401)
             ->setJSON([
-                'success'    => false,
+                'success' => false,
                 'httpStatus' => 401,
-                'message'    => $message,
-                'errors'     => [
+                'message' => $message,
+                'errors' => [
                     'auth' => $message
                 ]
             ]);

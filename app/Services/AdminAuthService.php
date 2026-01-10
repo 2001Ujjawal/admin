@@ -18,6 +18,7 @@ class AdminAuthService
     {
         $userEmail = $requestData['email'] ?? null;
         $userPassword = $requestData['password'] ?? null;
+        api_log("info", 'value', $requestData);
 
         if (empty($userEmail)) {
             $this->sessionService->error('Please enter a valid email');
@@ -27,17 +28,19 @@ class AdminAuthService
         if (empty($userPassword)) {
             $this->sessionService->error('Please enter a password');
             return false;
-            
+
         }
 
         if ($userEmail === 'u5459607@gmail.com' && $userPassword === '123456') {
+            log_message("info", 'success');
             $this->sessionService->success('Login successful');
             return true;
         }
+        log_message("error", 'success', );
 
         $this->sessionService->error('Invalid email or password');
         return false;
     }
 
- 
+
 }

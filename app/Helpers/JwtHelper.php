@@ -20,9 +20,9 @@ class JwtHelper
         }
 
         $payload = [
-            'iss'  => base_url(),
-            'iat'  => time(),
-            'exp'  => time() + getenv('JWT_TOKEN_EXPIRE_TIME'),
+            'iss' => base_url(),
+            'iat' => time(),
+            'exp' => time() + getenv('JWT_TOKEN_EXPIRE_TIME'),
             'data' => $userData
         ];
 
@@ -34,13 +34,13 @@ class JwtHelper
         $token = self::generateJWTtoken($userData);
 
         $cookie = new Cookie(
-            getenv('COOKIE_NAME') ?? 'jwt_token',
+            getenv('COOKIE_NAME') ?? 'access_token',
             $token,
             [
-                'expires'  => time() + getenv('JWT_TOKEN_EXPIRE_TIME'),
+                'expires' => time() + getenv('JWT_TOKEN_EXPIRE_TIME'),
                 'httponly' => true,   // MUST be true
-                'secure'   => false,  // true in HTTPS
-                'path'     => '/',
+                'secure' => false,  // true in HTTPS
+                'path' => '/',
                 'samesite' => 'Lax'
             ]
         );

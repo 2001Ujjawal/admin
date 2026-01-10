@@ -66,3 +66,8 @@ $routes->group('', function ($routes) {
         });
     });
 });
+
+
+// cli command routes 
+
+$routes->cli('test-cli', 'CliController::index');
