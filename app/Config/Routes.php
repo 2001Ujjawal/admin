@@ -1,5 +1,6 @@
 <?php
 
+use CodeIgniter\Controller;
 use CodeIgniter\Router\RouteCollection;
 
 /**
@@ -66,3 +67,11 @@ $routes->group('', function ($routes) {
         });
     });
 });
+
+
+// cli command routes 
+
+
+$routes->resource('test', ['controller' => 'Apis\ResourceController']);
+
+$routes->get('interface-practice', 'Home::interfaceAndImplements');
