@@ -87,7 +87,7 @@ class Filters extends BaseFilters
             'csrf' => [
                 'except' =>
                     'backend-api/*',
-               
+
             ],
             // 'invalidchars',
             'cookieCheck' => [
@@ -96,7 +96,8 @@ class Filters extends BaseFilters
                     '/login',
                     'admin-login',
                     'backend-api/*',
-                    'libraries/*'
+                    'libraries/*',
+                    'interface-practice'
                 ]
             ]
         ],

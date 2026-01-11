@@ -73,3 +73,5 @@ $routes->group('', function ($routes) {
 
 
 $routes->resource('test', ['controller' => 'Apis\ResourceController']);
+
+$routes->get('interface-practice', 'Home::interfaceAndImplements');
