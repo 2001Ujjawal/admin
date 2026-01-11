@@ -21,7 +21,7 @@ class OtpService
         $this->emailService = $emailService;
     }
 
-    public function sendOtp(array $requestData)
+    public function sendOtp(array $requestData, string $userType)
     {
         $validated = checkValidationRulesHelper::validateData(
             'otpSendValidationRules',
@@ -37,18 +37,29 @@ class OtpService
         }
 
         $email = $requestData['email'];
-
-        if (!$this->libraryModel->checkLibraryExits($email)) {
+        $checkEmailExits = $this->libraryModel->checkLibraryExits($email);
+        if (!$checkEmailExits) {
             return ResponseHelper::error(404, 'Email not found');
         }
 
-        $otp = rand(100000, 999999);
+        $otp = 1234;
+        $systemOtp = 5678;
 
-        // Save OTP (example)
-        // $this->otpModel->insert([
-        //     'email' => $email,
-        //     'otp'   => $otp
-        // ]);
+        $otpSaveDataPayload = [
+            'uid' => generateUid(),
+            'hash_otp' => password_hash($otp, PASSWORD_DEFAULT),
+            'system_otp' => $systemOtp,
+            'user_id' => $checkEmailExits->uid,
+            'value' => $email,
+            'purpose' => 'forgot_password',
+            'otp_send_type' => 'email',
+            'user_type' => $userType ?? 'library'
+        ];
+
+        $storeOtp = $this->otpModel->storeOtp($otpSaveDataPayload);
+        if (!$storeOtp) {
+            return ResponseHelper::error(500, 'Failed to send');
+        }
 
         $sent = $this->emailService->emailSend(
             $email,
@@ -59,7 +70,9 @@ class OtpService
         if (!$sent) {
             return ResponseHelper::error(500, 'OTP email sending failed');
         }
-
-        return ResponseHelper::success(200, 'OTP sent successfully');
+        $otpDetails = [
+            'systemOtp' => $systemOtp,
+        ];
+        return ResponseHelper::success(200, 'OTP sent successfully', ['otpDetails' => $otpDetails]);
     }
 }

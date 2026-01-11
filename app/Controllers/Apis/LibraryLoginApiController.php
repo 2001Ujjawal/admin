@@ -28,7 +28,7 @@ class LibraryLoginApiController extends BaseApiController
     public function  sendOtp()
     {
         $requestData = $this->request->getJSON(true) ?? [];
-        $otpSend = $this->otpService->sendOtp($requestData);
+        $otpSend = $this->otpService->sendOtp($requestData, 'library');
         return $this->sendApiResponse($otpSend);
     }
 }

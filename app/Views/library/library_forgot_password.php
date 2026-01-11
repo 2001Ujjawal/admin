@@ -70,9 +70,7 @@
                                         </div>
 
                                         <div style="padding-top: 11px;" class="col-12">
-                                            <!-- <button class="btn btn-primary w-100" type="submit">Send Otp</button> -->
-                                            <button id="btnSendOtp" class="btn btn-primary w-100" type="submit" disabled>
-                                                <span style="display: none;" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="loginBtnSpinner"></span>
+                                            <button id="btnSendOtp" class="btn btn-primary w-100" type="button" onclick="sendOtp()">
                                                 <span class="visually" id="btnSendOtpText">Send Otp</span>
                                             </button>
                                         </div>
@@ -91,11 +89,11 @@
                                         <input type="hidden" name="otp" id="otpValue">
 
                                         <div class="col-12">
-                                            <button class="btn btn-primary w-100" type="submit">
+                                            <button class="btn btn-primary w-100" type="button" onclick="verifyOtp()">
                                                 Verify OTP
                                             </button>
                                             <div style="padding-top: 10px;">
-                                                <button class="btn btn-primary w-100" type="submit">
+                                                <button class="btn btn-primary w-100" type="button" onclick="resendOtp()">
                                                     Resend otp
                                                 </button>
                                             </div>
@@ -136,7 +134,69 @@
     <!-- Template Main JS File -->
     <script src="<?= base_url('') ?>assets/js/main.js"></script>
 </body>
+<script>
+    let systemOtp = null;
+    let email = '';
 
+    function sendOtp() {
+        email = $('#email').val().trim();
+        let btnSendOtpText = $('#btnSendOtpText');
+        if (email === '') {
+            return notificationMessage('Email is required', 'error');
+        }
+        let forgotPasswordPayload = JSON.stringify({
+            "email": email
+        });
+
+        btnSendOtpText.prop("disabled", true);
+        btnSendOtpText.text("Please wait...");
+        $.ajax({
+            type: "post",
+            url: "http://localhost:8080/backend-api/libraries/otp-send",
+            data: forgotPasswordPayload,
+            success: (response) => {
+
+                btnSendOtpText.prop("disabled", false);
+                btnSendOtpText.text("Send OTP");
+
+                if (response.httpStatus === 200 || response.success === true) {
+                    notificationMessage(response.message, 'success');
+                    $('#sendOtpFrom').hide();
+                    $('#otpSubmitForm').show();
+                    systemOtp = response.data.otpDetails.systemOtp ?? null;
+                } else {
+                    notificationMessage(response.message, 'error');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                }
+            },
+            error: (xhr) => {
+                notificationMessage(xhr.responseJSON.message);
+                console.log("================ error Response", xhr);
+                console.error(xhr.responseJSON);
+
+            }
+        });
+    }
+
+    function verifyOtp() {
+        let otpValue = $("#otpValue").val();
+        if (otpValue === '') {
+            return notificationMessage('Please enter OTP');
+        }
+        if (otpValue.length !== 4) {
+            return notificationMessage('Please enter full 4-digit OTP');
+        }
+        console.log("=============== otpValue", otpValue);
+
+        alert('System OTP: ' + systemOtp);
+    }
+
+    function resendOtp() {
+        alert('email : ' + email);
+    }
+</script>
 <script>
     const otpBoxes = document.querySelectorAll('.otp-box');
     const otpValue = document.getElementById('otpValue');
@@ -192,21 +252,32 @@
             return;
         }
 
-        
+
 
         // AJAX API call here
     });
 
-    let sendOtpFrom = $("#sendOtpFrom");
-    console.log("=========sendOtpFrom", sendOtpFrom);
+    function notificationMessage(message, type = 'error') {
+        let bgColor = "";
 
-    let otpSubmitForm = document.getElementById("otpSubmitForm");
-    $(document).on('click', function() {
-        sendOtpFrom.css("display", "none");
+        if (type === "success") {
+            bgColor = "linear-gradient(to right, #00b09b, #96c93d)";
+        } else if (type === "error") {
+            bgColor = "linear-gradient(to right, #ff5f6d, #ffc371)";
+        }
 
-        otpSubmitForm.style.display = 'block';
-        // Code to execute when the 'event' occurs on the document
-    });
+        Toastify({
+            text: message,
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+                background: bgColor,
+            },
+        }).showToast();
+    }
 </script>
 
 </html>

@@ -21,4 +21,12 @@ class OtpModel extends Model
         'status',
         'purpose'
     ];
+
+
+    public function storeOtp(array $otpSaveData): array|bool
+    {
+        $saveOtp = $this->insert($otpSaveData);
+        if ($saveOtp === false)  return false;
+        return true;
+    }
 }
