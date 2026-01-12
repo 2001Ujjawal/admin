@@ -72,6 +72,8 @@ class OtpService
         // }
         $otpDetails = [
             'systemOtp' => $systemOtp,
+            'otpId' => $storeOtp
+
         ];
         return ResponseHelper::success(200, 'OTP resend sent successfully', ['otpDetails' => $otpDetails]);
     }
@@ -127,7 +129,13 @@ class OtpService
         // }
         $otpDetails = [
             'systemOtp' => $systemOtp,
+            'otpId' => $storeOtp
         ];
         return ResponseHelper::success(200, 'OTP sent successfully', ['otpDetails' => $otpDetails]);
+    }
+
+    private function otpReturnResponseValue(): array
+    {
+        return [];
     }
 }
