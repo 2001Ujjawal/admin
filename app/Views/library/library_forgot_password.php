@@ -89,7 +89,7 @@
                                         <input type="hidden" name="otp" id="otpValue">
 
                                         <div class="col-12">
-                                            <button class="btn btn-primary w-100" type="button" onclick="verifyOtp()">
+                                            <button id="verifyOtpBtn" class="btn btn-primary w-100" type="button" onclick="verifyOtp()">
                                                 Verify OTP
                                             </button>
                                             <div style="padding-top: 10px;">
@@ -99,6 +99,27 @@
                                             </div>
 
                                         </div>
+                                    </form>
+
+
+                                    <form id="passwordChangeFrom" style="display: none;" novalidate>
+                                        <div class="col-12">
+                                            <div class="input-group has-validation">
+                                                <input placeholder=" new password" id="newPassword" type="text" name="newPassword" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="input-group has-validation">
+                                                <input placeholder="confirm password" id="confirmPassword" type="name" name="confirmPassword" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <button id="saveNewBtn" class="btn btn-primary w-100" type="button" onclick="saveNewPassword()">
+                                                Save
+                                            </button>
+                                        </div>
+
                                     </form>
                                 </div>
 
@@ -182,6 +203,9 @@
     }
 
     function verifyOtp() {
+        const $verifyOtpBtn = $('#verifyOtpBtn');
+        $verifyOtpBtn.prop("disabled", true).text("Please wait...");
+
         let otpValue = $("#otpValue").val();
         if (otpValue === '') {
             return notificationMessage('Please enter OTP');
@@ -189,9 +213,37 @@
         if (otpValue.length !== 4) {
             return notificationMessage('Please enter full 4-digit OTP');
         }
+
         console.log("=============== otpValue", otpValue);
 
-        alert('System OTP: ' + systemOtp);
+        console.log('System OTP: ' + systemOtp);
+        const otpVerifyPayload = JSON.stringify({
+            'otp': otpValue,
+            'system_otp': systemOtp
+        });
+        console.log("====================otpVerifyPayload ", otpVerifyPayload);
+
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/backend-api/libraries/otp/verify",
+            contentType: "application/json",
+            data: otpVerifyPayload,
+            success: function(response) {
+                if (response.httpStatus === 200 || response.success === true) {
+                    $('#otpSubmitForm').hide();
+                    $('#passwordChangeFrom').show();
+                }
+            },
+            error: function(xhr) {
+                $verifyOtpBtn.prop("disabled", false).text("Verify OTP");
+                notificationMessage(xhr?.responseJSON?.message || 'Something went wrong', 'error');
+                console.error(xhr);
+            },
+            complete: () => {
+                $verifyOtpBtn.prop("disabled", false).text("Verify OTP");
+            }
+        });
+
     }
 
     function resendOtp() {
@@ -227,6 +279,12 @@
                 $btn.prop("disabled", false).text("Resend OTP");
             }
         });
+    }
+
+
+    function saveNewPassword() {
+        console.log("=====================saveNewPassword ", );
+
     }
 </script>
 <script>
