@@ -93,7 +93,7 @@
                                                 Verify OTP
                                             </button>
                                             <div style="padding-top: 10px;">
-                                                <button class="btn btn-primary w-100" type="button" onclick="resendOtp()">
+                                                <button id="resendOtpBtn" class="btn btn-primary w-100" type="button" onclick="resendOtp()">
                                                     Resend otp
                                                 </button>
                                             </div>
@@ -137,10 +137,11 @@
 <script>
     let systemOtp = null;
     let email = '';
+    let btnSendOtpText = null;
 
     function sendOtp() {
         email = $('#email').val().trim();
-        let btnSendOtpText = $('#btnSendOtpText');
+        btnSendOtpText = $('#btnSendOtpText');
         if (email === '') {
             return notificationMessage('Email is required', 'error');
         }
@@ -152,7 +153,7 @@
         btnSendOtpText.text("Please wait...");
         $.ajax({
             type: "post",
-            url: "http://localhost:8080/backend-api/libraries/otp-send",
+            url: "http://localhost:8080/backend-api/libraries/otp/send",
             data: forgotPasswordPayload,
             success: (response) => {
 
@@ -194,7 +195,38 @@
     }
 
     function resendOtp() {
-        alert('email : ' + email);
+        const $btn = $('#resendOtpBtn');
+
+        $btn.prop("disabled", true).text("Please wait...");
+
+        const resendOtpPayload = JSON.stringify({
+            email: email
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/backend-api/libraries/otp/resend",
+            data: resendOtpPayload,
+            contentType: "application/json",
+
+            success: function(response) {
+                if (response.httpStatus === 200 || response.success === true) {
+                    notificationMessage(response.message, 'success');
+                    systemOtp = response?.data?.otpDetails?.systemOtp ?? null;
+                } else {
+                    notificationMessage(response.message, 'error');
+                }
+            },
+
+            error: function(xhr) {
+                notificationMessage(xhr?.responseJSON?.message || 'Something went wrong', 'error');
+                console.error(xhr);
+            },
+
+            complete: function() {
+                $btn.prop("disabled", false).text("Resend OTP");
+            }
+        });
     }
 </script>
 <script>

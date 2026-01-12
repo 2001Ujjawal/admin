@@ -46,3 +46,18 @@ if (!function_exists('generateUid')) {
         return $prefix . $id;
     }
 }
+
+
+if (!function_exists('generateOtp')) {
+    function generateOtp(int $length = 4): int
+    {
+        $digits = '0123456789';
+        $otp = '';
+        $maxIndex = strlen($digits) - 1;
+
+        for ($i = 0; $i < $length; $i++) {
+            $otp .= $digits[random_int(0, $maxIndex)];
+        }
+        return (int) $otp;
+    }
+}
