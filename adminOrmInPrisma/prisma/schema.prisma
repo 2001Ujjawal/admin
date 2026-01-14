@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model library {
+  id                Int                       @id @default(autoincrement())
+  uid               String?                   @unique(map: "uid") @db.VarChar(121)
+  name              String?                   @db.VarChar(121)
+  email             String?                   @db.VarChar(121)
+  address           String?                   @db.VarChar(121)
+  password          String?                   @db.VarChar(121)
+  phone_no          String?                   @db.VarChar(121)
+  created_by        String?                   @db.VarChar(121)
+  created_at        DateTime?                 @default(now()) @db.Timestamp(0)
+  type              String?                   @db.VarChar(121)
+  reg_no            String?                   @db.VarChar(121)
+  library_user_type library_library_user_type @default(admin)
+  library_setting   library_setting[]
+}
+
+model library_login_sessions {
+  id            Int                           @id @default(autoincrement())
+  uid           String                        @unique(map: "uid") @db.VarChar(121)
+  library_id    String?                       @db.VarChar(121)
+  email         String?                       @db.VarChar(121)
+  phone_no      String?                       @db.VarChar(121)
+  is_login      Int                           @default(1) @db.TinyInt
+  login_details String?                       @db.LongText
+  type          String?                       @db.VarChar(121)
+  created_at    DateTime                      @default(now()) @db.Timestamp(0)
+  status        library_login_sessions_status @default(active)
+}
+
+model library_setting {
+  id                          Int                           @id @default(autoincrement())
+  uid                         String                        @unique(map: "user_setting_uid") @db.VarChar(121)
+  library_id                  String                        @db.VarChar(121)
+  is_two_setup_authentication Boolean                       @default(false)
+  allow_login_device          Int?                          @default(1)
+  created_at                  DateTime                      @default(now()) @db.Timestamp(0)
+  created_by                  String                        @db.VarChar(121)
+  last_updated_by             String                        @db.VarChar(121)
+  last_updated_at             String                        @db.VarChar(121)
+  otp_send_type               library_setting_otp_send_type @default(email)
+  library                     library                       @relation(fields: [library_id], references: [uid], onDelete: Cascade, map: "lib_setting_id")
+
+  @@index([library_id], map: "lib_setting_id")
+}
+
+model otp {
+  id            Int                @id @default(autoincrement())
+  uid           String             @unique(map: "otp_uid") @db.VarChar(121)
+  user_id       String             @db.VarChar(121)
+  otp_send_type otp_otp_send_type?
+  user_type     otp_user_type?
+  value         String?            @db.VarChar(121)
+  hash_otp      String?            @db.VarChar(121)
+  system_otp    Int
+  created_at    DateTime           @default(now()) @db.Timestamp(0)
+  status        otp_status         @default(credit)
+  purpose       String?            @db.VarChar(121)
+}
+
+model user {
+  id              Int       @id @default(autoincrement())
+  uid             String?   @unique(map: "user_uid") @db.VarChar(121)
+  name            String?   @db.VarChar(121)
+  email           String?   @db.VarChar(121)
+  image           String?   @db.VarChar(121)
+  address_json    String?   @db.VarChar(121)
+  lat             String?   @db.VarChar(121)
+  long            String?   @db.VarChar(121)
+  geo_hash        String?   @db.VarChar(121)
+  password        String?   @db.VarChar(121)
+  type            user_type @default(user)
+  created_at      DateTime  @default(now()) @db.Timestamp(0)
+  created_by      String?   @db.VarChar(121)
+  last_updated_by String?   @db.VarChar(121)
+  last_updated_at DateTime? @default(now()) @db.Timestamp(0)
+}
+
+enum otp_otp_send_type {
+  email
+  phone
+}
+
+enum otp_user_type {
+  admin
+  library
+}
+
+enum library_login_sessions_status {
+  active
+  inactive
+  deleted
+}
+
+enum library_setting_otp_send_type {
+  email
+  phone
+  whatsapp
+  device_permission
+}
+
+enum otp_status {
+  consumed
+  failed
+  credit
+  expired
+}
+
+enum user_type {
+  admin
+  user
+}
+
+enum library_library_user_type {
+  admin
+  staff
+}

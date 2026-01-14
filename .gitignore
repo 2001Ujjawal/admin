@@ -1,7 +1,8 @@
 #-------------------------
 # Operating Specific Junk Files
 #-------------------------
-
+/adminOrmInPrisma/node_modules/*
+/adminOrmInPrisma/env
 # OS X
 .DS_Store
 .AppleDouble
