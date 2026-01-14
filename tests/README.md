@@ -1,3 +1,5 @@
+# php spark serve --host 192.168.0.31 --port 8080
+
 # Running Application Tests
 
 This is the quick-start to CodeIgniter testing. Its intent is to describe what

@@ -7,6 +7,9 @@ use App\Services\PaypalPayment;
 
 class Home extends BaseController
 {
+
+    public function __construct() {}
+
     public function index(): string
     {
         return view('welcome_message');
@@ -17,7 +20,7 @@ class Home extends BaseController
     {
 
         $payment = new PaypalPayment();
-        $stripPayment = new StripePayment();
+        
         $result = [
             'payPal' => $payment->pay(5000),
             'stripPayment' => $stripPayment->payPal(5000)
@@ -25,3 +28,6 @@ class Home extends BaseController
         prt($result);
     }
 }
+
+
+

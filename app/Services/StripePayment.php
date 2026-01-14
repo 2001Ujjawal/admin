@@ -10,4 +10,6 @@ class StripePayment   implements PaymentInterface
     {
         return "Paid ₹{$amount} using Stripe";
     }
+
+    
 }
