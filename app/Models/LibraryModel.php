@@ -39,4 +39,15 @@ class LibraryModel extends Model
     {
         return $this->where('email', $email)->get()->getRow();
     }
+
+
+    public function passwordUpdate(string $password, int $libraryId): true
+    {
+        $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+        $passwordUpdate = $this->update($libraryId, ['password' => $hashPassword]);
+        if (!$passwordUpdate) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -181,6 +181,7 @@
         otpBoxes.forEach(box => otp += box.value);
         otpValue.value = otp;
     }
+    
     document.getElementById('otpSubmitForm').addEventListener('submit', function(e) {
         e.preventDefault();
 

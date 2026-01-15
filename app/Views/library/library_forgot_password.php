@@ -68,7 +68,11 @@
                                                 <input placeholder="please enter your email" id="email" type="email" name="email" class="form-control">
                                             </div>
                                         </div>
-
+                                        <div class="col-12" style="padding-top:10px;">
+                                            <p style="text-align: right;" class=" small mb-0"><a href="<?= base_url('libraries/login') ?>">
+                                                    Login</a>
+                                            </p>
+                                        </div>
                                         <div style="padding-top: 11px;" class="col-12">
                                             <button id="btnSendOtp" class="btn btn-primary w-100" type="button" onclick="sendOtp()">
                                                 <span class="visually" id="btnSendOtpText">Send Otp</span>
@@ -103,12 +107,12 @@
 
 
                                     <form id="passwordChangeFrom" style="display: none;" novalidate>
-                                        <div class="col-12">
+                                        <div class="col-12 pb-3">
                                             <div class="input-group has-validation">
-                                                <input placeholder=" new password" id="newPassword" type="text" name="newPassword" class="form-control">
+                                                <input placeholder=" new password" id="password" type="text" name="newPassword" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-12">
+                                        <div class="col-12 pb-3">
                                             <div class="input-group has-validation">
                                                 <input placeholder="confirm password" id="confirmPassword" type="name" name="confirmPassword" class="form-control">
                                             </div>
@@ -157,6 +161,7 @@
 </body>
 <script>
     let systemOtp = null;
+    let otpId = null;
     let email = '';
     let btnSendOtpText = null;
 
@@ -184,8 +189,12 @@
                 if (response.httpStatus === 200 || response.success === true) {
                     notificationMessage(response.message, 'success');
                     $('#sendOtpFrom').hide();
-                    $('#otpSubmitForm').show();
+                    setTimeout(() => {
+                        $('#otpSubmitForm').show();
+                    }, 60);
+
                     systemOtp = response.data.otpDetails.systemOtp ?? null;
+                    otpId = response.data.otpDetails.otpId ?? null;
                 } else {
                     notificationMessage(response.message, 'error');
                     setTimeout(() => {
@@ -197,7 +206,10 @@
                 notificationMessage(xhr.responseJSON.message);
                 console.log("================ error Response", xhr);
                 console.error(xhr.responseJSON);
-
+            },
+            complete: () => {
+                btnSendOtpText.prop("disabled", false);
+                btnSendOtpText.text("Send OTP");
             }
         });
     }
@@ -208,9 +220,11 @@
 
         let otpValue = $("#otpValue").val();
         if (otpValue === '') {
+            $verifyOtpBtn.prop("disabled", false).text("Verify OTP");
             return notificationMessage('Please enter OTP');
         }
         if (otpValue.length !== 4) {
+            $verifyOtpBtn.prop("disabled", false).text("Verify OTP");
             return notificationMessage('Please enter full 4-digit OTP');
         }
 
@@ -219,7 +233,8 @@
         console.log('System OTP: ' + systemOtp);
         const otpVerifyPayload = JSON.stringify({
             'otp': otpValue,
-            'system_otp': systemOtp
+            'system_otp': systemOtp,
+            'otp_id': otpId
         });
         console.log("====================otpVerifyPayload ", otpVerifyPayload);
 
@@ -283,7 +298,40 @@
 
 
     function saveNewPassword() {
-        console.log("=====================saveNewPassword ", );
+        let password = $('#password');
+        let confirmPassword = $('#confirmPassword');
+        const $saveNewBtn = $('#saveNewBtn');
+
+
+        const passwordChangePayload = JSON.stringify({
+            "email": email,
+            "password": password.val(),
+            "new_password": confirmPassword.val()
+
+        });
+        console.log("=====================saveNewPassword ", passwordChangePayload);
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/backend-api/libraries//change-password",
+            contentType: "application/json",
+            data: passwordChangePayload,
+            success: function(response) {
+                if (response.httpStatus === 200 || response.success === true) {
+                    setTimeout(() => {
+                        window.location.href = '<?= base_url('libraries/login') ?>';
+                    }, 1200);
+                }
+            },
+            error: function(xhr) {
+                $saveNewBtn.prop("disabled", false).text("Save");
+                notificationMessage(xhr?.responseJSON?.message || 'Something went wrong', 'error');
+                console.error(xhr);
+            },
+            complete: () => {
+                $saveNewBtn.prop("disabled", false).text("Save");
+            }
+        });
+
 
     }
 </script>

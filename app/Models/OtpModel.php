@@ -23,10 +23,10 @@ class OtpModel extends Model
     ];
 
 
-    public function storeOtp(array $otpSaveData): array|bool
+    public function storeOtp(array $otpSaveData): array|bool|string
     {
         $saveOtp = $this->insert($otpSaveData);
         if ($saveOtp === false)  return false;
-        return true;
+        return $otpSaveData['uid'];
     }
 }

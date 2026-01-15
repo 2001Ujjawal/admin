@@ -141,8 +141,21 @@ class OtpService
 
     public function verifyOtp(array $requestData, string $userType)
     {
+        $validated = checkValidationRulesHelper::validateData(
+            'otpVerifyValidationRules',
+            $requestData
+        );
+
+        if (!$validated['status']) {
+            return ResponseHelper::error(
+                422,
+                $validated['first_error'],
+                $validated['errors']
+            );
+        }
         $otp = $requestData['otp'];
         $systemOtp = $requestData['system_otp'];
+        
         if ($otp == 1234 || $systemOtp !== '') {
             return ResponseHelper::success(200, 'Otp verify successfully');
         }
