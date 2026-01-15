@@ -181,6 +181,7 @@
         otpBoxes.forEach(box => otp += box.value);
         otpValue.value = otp;
     }
+    
     document.getElementById('otpSubmitForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -254,8 +255,6 @@
             error: function(xhr) {
                 notificationMessage(xhr.responseJSON.message);
                 console.log("================ error Response", xhr);
-
-
                 console.error(xhr.responseJSON);
             }
         });
