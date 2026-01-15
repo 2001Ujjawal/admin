@@ -1,6 +1,9 @@
 # CodeIgniter 4 Framework
 
+# php spark serve --host 192.168.0.31 --port 8080
+
 ## Setup Note
+
 - `vendor/` is excluded from Git → run `composer install`
 - `public/assets/` is provided as ZIP → extract and move to `public/assets`
   -- `assets_vendor` zip (this folder) ;
