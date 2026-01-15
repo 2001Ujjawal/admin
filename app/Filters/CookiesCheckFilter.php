@@ -31,7 +31,7 @@ class CookiesCheckFilter implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         //
-        $jwt = $request->getCookie('access_token');
+        $jwt = $request->getCookie(getenv('COOKIE_NAME'));
 
         if (empty($jwt)) {
             return redirect()->to('/login');
@@ -40,7 +40,6 @@ class CookiesCheckFilter implements FilterInterface
         try {
             $secret = getenv('JWT_PRIVATE_KEY') ?: 'access_token';
             $decoded = JWT::decode($jwt, new Key($secret, 'HS256'));
-
         } catch (\Throwable $th) {
             log_message('error', 'cookie token check throw ', ['error' => $th]);
             return redirect()->to('/login');

@@ -255,8 +255,6 @@
             error: function(xhr) {
                 notificationMessage(xhr.responseJSON.message);
                 console.log("================ error Response", xhr);
-
-
                 console.error(xhr.responseJSON);
             }
         });
